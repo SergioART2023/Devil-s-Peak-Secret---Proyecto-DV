@@ -5,7 +5,7 @@ extends Node2D
 
 signal exit_requested(target_room: String, target_spawn: String)
 
-const TILE := 16
+const TILE := 32
 const COLS := 30
 const ROWS := 16
 
@@ -280,7 +280,7 @@ func _apply_initial_state() -> void:
 
 
 func _place_player() -> void:
-	var pos: Vector2 = spawns.get(spawn_key, spawns.get("a", Vector2(240, 128)))
+	var pos: Vector2 = spawns.get(spawn_key, spawns.get("a", Vector2(COLS * TILE / 2.0, ROWS * TILE / 2.0)))
 	entry_pos = pos
 	player.room = self
 	player.global_position = pos
@@ -367,7 +367,7 @@ func _clear_room() -> void:
 # --- Bucle ---------------------------------------------------------------------------------
 func _physics_process(_delta: float) -> void:
 	if state == State.WAITING and player != null \
-			and player.global_position.distance_to(entry_pos) > 44.0:
+			and player.global_position.distance_to(entry_pos) > TILE * 2.75:
 		_start_combat()
 	if not puzzle_done and (plates.size() > 0 or switches.size() > 0):
 		_check_puzzle()
@@ -403,24 +403,24 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
+	var tile_size := Vector2(TILE, TILE)
 	for y in ROWS:
 		for x in COLS:
 			var ch: String = grid[y][x]
 			var pos := Vector2(x * TILE, y * TILE)
+			var dest := Rect2(pos, tile_size)
 			if ch == "#":
 				var below := char_at(Vector2i(x, y + 1))
-				draw_texture(TEX_WALL_FACE if below != "#" else TEX_WALL_TOP, pos)
+				draw_texture_rect(TEX_WALL_FACE if below != "#" else TEX_WALL_TOP, dest, false)
 			elif ch == "~":
-				draw_texture_rect_region(TEX_LAVA, Rect2(pos, Vector2(TILE, TILE)),
-						Rect2(lava_frame * TILE, 0, TILE, TILE))
+				draw_texture_rect_region(TEX_LAVA, dest, Rect2(lava_frame * 16, 0, 16, 16))
 			else:
-				draw_texture(TEX_FLOOR_B if (x * 7 + y * 13) % 5 == 0 else TEX_FLOOR_A, pos)
+				draw_texture_rect(TEX_FLOOR_B if (x * 7 + y * 13) % 5 == 0 else TEX_FLOOR_A, dest, false)
 				match ch:
 					"P":
-						draw_texture(TEX_PEDESTAL, pos)
+						draw_texture_rect(TEX_PEDESTAL, dest, false)
 					"A":
-						draw_texture(TEX_ALTAR, pos)
+						draw_texture_rect(TEX_ALTAR, dest, false)
 					"T":
 						var f := 1 if plates_pressed.get(Vector2i(x, y), false) else 0
-						draw_texture_rect_region(TEX_PLATE, Rect2(pos, Vector2(TILE, TILE)),
-								Rect2(f * TILE, 0, TILE, TILE))
+						draw_texture_rect_region(TEX_PLATE, dest, Rect2(f * 16, 0, 16, 16))

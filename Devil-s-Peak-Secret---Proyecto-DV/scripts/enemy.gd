@@ -44,7 +44,7 @@ func _ai(_delta: float) -> void:
 
 func _contact_check() -> void:
 	if contact_damage > 0 and player != null and player.state != Player.State.DEAD \
-			and global_position.distance_to(player.global_position) < 11.0:
+			and global_position.distance_to(player.global_position) < 22.0:
 		player.take_damage(contact_damage, global_position)
 
 
@@ -52,7 +52,7 @@ func take_damage(amount: int, from_pos: Vector2) -> void:
 	if dead:
 		return
 	hp -= amount
-	knock = (global_position - from_pos).normalized() * 130.0
+	knock = (global_position - from_pos).normalized() * 260.0
 	knock_time = 0.18
 	sprite.modulate = Color(1.0, 0.35, 0.35)
 	var tw := create_tween()
@@ -72,6 +72,6 @@ func _die() -> void:
 ## Animacion de muerte por defecto; los enemigos con hoja propia la sobreescriben.
 func _death_animation() -> void:
 	var tw := create_tween()
-	tw.tween_property(sprite, "scale", Vector2(1.5, 0.1), 0.25)
+	tw.tween_property(sprite, "scale", Vector2(3.0, 0.2), 0.25)
 	tw.parallel().tween_property(sprite, "modulate:a", 0.0, 0.25)
 	await tw.finished

@@ -1,37 +1,33 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://byca7ovstyyha"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/jacob.png" id="2_jacob"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/slash.png" id="3_slash"]
+[ext_resource type="Script" uid="uid://cicd5cnl8sani" path="res://scripts/player.gd" id="1_player"]
+[ext_resource type="SpriteFrames" uid="uid://dt0cdu31k2q82" path="res://autosprite_imported/Jacobo/Jacobo_frames.tres" id="2_qhqgy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(10, 10)
+size = Vector2(16, 11)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sword"]
-size = Vector2(14, 14)
+size = Vector2(32, 32)
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1018575903 groups=["player"]]
 collision_layer = 2
-collision_mask = 1
 motion_mode = 1
 script = ExtResource("1_player")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_jacob")
-hframes = 4
-vframes = 4
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1579392990]
+scale = Vector2(0.2, 0.2)
+sprite_frames = ExtResource("2_qhqgy")
+animation = &"Attack Up_right"
+frame_progress = 0.72867537
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=4976945]
+position = Vector2(0, 7.5)
 shape = SubResource("RectangleShape2D_body")
 
-[node name="SwordHitbox" type="Area2D" parent="."]
+[node name="SwordHitbox" type="Area2D" parent="." unique_id=889525326]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHitbox" unique_id=1792180824]
 shape = SubResource("RectangleShape2D_sword")
 disabled = true
-
-[node name="Slash" type="Sprite2D" parent="SwordHitbox"]
-texture = ExtResource("3_slash")

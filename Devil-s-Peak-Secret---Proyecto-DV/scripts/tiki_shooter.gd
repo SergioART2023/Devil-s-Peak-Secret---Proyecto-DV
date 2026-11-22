@@ -3,7 +3,7 @@ extends Enemy
 ## Hombre con mascara tiki: se queda quieto, apunta al jugador y sopla dardos con su cerbatana.
 
 const DART_SCENE := preload("res://scenes/projectiles/dart.tscn")
-const RANGE := 220.0
+const RANGE := 440.0
 
 var cooldown := 1.6
 var busy := false
@@ -35,7 +35,7 @@ func _shoot() -> void:
 	var dart: Dart = DART_SCENE.instantiate()
 	dart.direction = (player.global_position - global_position).normalized()
 	get_parent().add_child(dart)
-	dart.global_position = global_position + dart.direction * 8.0
+	dart.global_position = global_position + dart.direction * 16.0
 	cooldown = 2.2
 	await get_tree().create_timer(0.2).timeout
 	busy = false

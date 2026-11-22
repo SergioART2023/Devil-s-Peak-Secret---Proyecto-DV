@@ -3,7 +3,10 @@ extends CanvasLayer
 ## Interfaz: corazones, objetos, mensajes, titulo de sala, fundidos y pantalla de derrota.
 ## Se construye por codigo para mantener la escena simple.
 
-const BAR_Y := 256
+const VIEW_W := 960
+const VIEW_H := 544
+const BAR_H := 32
+const BAR_Y := 512
 const HEARTS_TEX := preload("res://assets/sprites/ui/hearts.png")
 const SWORD_TEX := preload("res://assets/sprites/items/sword.png")
 const BOW_TEX := preload("res://assets/sprites/items/bow.png")
@@ -25,7 +28,7 @@ class HeartsRow extends Control:
 	func _draw() -> void:
 		for i in Game.MAX_HP / 2:
 			var v := clampi(hp - i * 2, 0, 2)   # 0 vacio, 1 medio, 2 lleno
-			draw_texture_rect_region(tex, Rect2(4 + i * 17, 0, 16, 16), Rect2(v * 16, 0, 16, 16))
+			draw_texture_rect_region(tex, Rect2(8 + i * 34, 0, 32, 32), Rect2(v * 16, 0, 16, 16))
 
 
 class ItemsRow extends Control:
@@ -36,12 +39,12 @@ class ItemsRow extends Control:
 		var font := ThemeDB.fallback_font
 		var x := 0.0
 		if Game.has_item("sword"):
-			draw_texture(sword_tex, Vector2(x, 0))
-			draw_string(font, Vector2(x + 14, 14), "J", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.8))
-			x += 34.0
+			draw_texture_rect(sword_tex, Rect2(x, 0, 32, 32), false)
+			draw_string(font, Vector2(x + 28, 26), "J", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1, 1, 1, 0.8))
+			x += 68.0
 		if Game.has_item("bow"):
-			draw_texture(bow_tex, Vector2(x, 0))
-			draw_string(font, Vector2(x + 14, 14), "K", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.8))
+			draw_texture_rect(bow_tex, Rect2(x, 0, 32, 32), false)
+			draw_string(font, Vector2(x + 28, 26), "K", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1, 1, 1, 0.8))
 
 
 func _ready() -> void:
@@ -50,32 +53,32 @@ func _ready() -> void:
 	var bar := ColorRect.new()
 	bar.color = Color(0.05, 0.03, 0.03)
 	bar.position = Vector2(0, BAR_Y)
-	bar.size = Vector2(480, 16)
+	bar.size = Vector2(VIEW_W, BAR_H)
 	add_child(bar)
 
 	hearts = HeartsRow.new()
 	hearts.tex = HEARTS_TEX
 	hearts.position = Vector2(0, BAR_Y)
-	hearts.size = Vector2(120, 16)
+	hearts.size = Vector2(240, BAR_H)
 	add_child(hearts)
 
 	items = ItemsRow.new()
 	items.sword_tex = SWORD_TEX
 	items.bow_tex = BOW_TEX
-	items.position = Vector2(400, BAR_Y)
-	items.size = Vector2(80, 16)
+	items.position = Vector2(VIEW_W - 160, BAR_Y)
+	items.size = Vector2(160, BAR_H)
 	add_child(items)
 
-	msg_label = _make_label(Vector2(0, 232), 10)
+	msg_label = _make_label(Vector2(0, BAR_Y - 48), 20)
 	msg_label.modulate.a = 0.0
-	title_label = _make_label(Vector2(0, 100), 18)
+	title_label = _make_label(Vector2(0, 200), 36)
 	title_label.modulate.a = 0.0
 
 	_build_game_over()
 
 	fade = ColorRect.new()
 	fade.color = Color(0, 0, 0, 0)
-	fade.size = Vector2(480, 272)
+	fade.size = Vector2(VIEW_W, VIEW_H)
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fade)
 
@@ -88,11 +91,11 @@ func _ready() -> void:
 func _make_label(pos: Vector2, font_size: int) -> Label:
 	var l := Label.new()
 	l.position = pos
-	l.size = Vector2(480, 24)
+	l.size = Vector2(VIEW_W, 48)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.add_theme_font_size_override("font_size", font_size)
 	l.add_theme_color_override("font_outline_color", Color.BLACK)
-	l.add_theme_constant_override("outline_size", 4)
+	l.add_theme_constant_override("outline_size", 6)
 	add_child(l)
 	return l
 
@@ -103,21 +106,21 @@ func _build_game_over() -> void:
 	add_child(over_panel)
 	var bg := ColorRect.new()
 	bg.color = Color(0.25, 0.0, 0.0, 0.75)
-	bg.size = Vector2(480, 272)
+	bg.size = Vector2(VIEW_W, VIEW_H)
 	over_panel.add_child(bg)
 	var t := Label.new()
 	t.text = "HAS CAÍDO EN EL TEMPLO"
-	t.position = Vector2(0, 100)
-	t.size = Vector2(480, 30)
+	t.position = Vector2(0, 200)
+	t.size = Vector2(VIEW_W, 60)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	t.add_theme_font_size_override("font_size", 22)
+	t.add_theme_font_size_override("font_size", 44)
 	over_panel.add_child(t)
 	var s := Label.new()
 	s.text = "Presiona ENTER para reintentar la sala"
-	s.position = Vector2(0, 136)
-	s.size = Vector2(480, 20)
+	s.position = Vector2(0, 272)
+	s.size = Vector2(VIEW_W, 40)
 	s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	s.add_theme_font_size_override("font_size", 12)
+	s.add_theme_font_size_override("font_size", 24)
 	over_panel.add_child(s)
 
 

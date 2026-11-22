@@ -6,7 +6,7 @@ signal died
 
 enum State { NORMAL, ATTACK, SHOOT, PULL, DEAD, LOCKED }
 
-const SPEED := 72.0
+const SPEED := 144.0
 const SWORD_TIME := 0.24
 const BOW_TIME := 0.25
 const BOW_COOLDOWN := 0.5
@@ -15,10 +15,31 @@ const GRAB_MOVE_TIME := 0.28    # duracion de un paso al empujar/halar con E
 const INVULN_TIME := 1.0
 const ARROW_SCENE := preload("res://scenes/projectiles/arrow.tscn")
 
-@onready var sprite: Sprite2D = $Sprite2D
+const ANIM_IDLE := {
+	Vector2i.DOWN: &"iso_idle_down_right",
+	Vector2i.UP: &"iso_idle_up_right",
+	Vector2i.LEFT: &"Idle Left_right",
+	Vector2i.RIGHT: &"iso_idle_right_right",
+}
+const ANIM_WALK := {
+	Vector2i.DOWN: &"iso_walk_down_right",
+	Vector2i.UP: &"iso_walk_up_right",
+	Vector2i.LEFT: &"Walk Left_right",
+	Vector2i.RIGHT: &"iso_walk_right_right",
+}
+const ANIM_ATTACK := {
+	Vector2i.DOWN: &"Attack Down_right",
+	Vector2i.UP: &"Attack Up_right",
+	Vector2i.LEFT: &"Attack Left_right",
+	Vector2i.RIGHT: &"Attack Right_right",
+}
+
+@export var attack_scale_mult := 1.34
+@export var attack_offset := Vector2.ZERO
+
+@onready var sprite: AnimatedSprite2D = _find_animated_sprite()
 @onready var sword_hitbox: Area2D = $SwordHitbox
 @onready var sword_shape: CollisionShape2D = $SwordHitbox/CollisionShape2D
-@onready var slash: Sprite2D = $SwordHitbox/Slash
 
 var room: Room
 var facing := Vector2i.DOWN
@@ -32,12 +53,16 @@ var bow_cd := 0.0
 var safe_timer := 0.0
 var last_safe_pos := Vector2.ZERO
 var _sword_hit: Dictionary = {}
+var _base_sprite_scale := Vector2.ONE
+var _base_sprite_offset := Vector2.ZERO
 
 
 func _ready() -> void:
 	sword_shape.disabled = true
-	slash.visible = false
 	sword_hitbox.body_entered.connect(_on_sword_body_entered)
+	if sprite != null:
+		_base_sprite_scale = sprite.scale
+		_base_sprite_offset = sprite.offset
 
 
 ## Se llama cada vez que el jugador entra a una sala nueva.
@@ -100,7 +125,7 @@ func _process_normal(delta: float) -> void:
 	_check_push(input, delta)
 
 	if room != null:
-		if room.is_lava(room.pos_to_cell(global_position + Vector2(0, 3))):
+		if room.is_lava(room.pos_to_cell(global_position + Vector2(0, 6))):
 			_burn()
 		else:
 			_track_safe(delta)
@@ -149,7 +174,7 @@ func _grab(input: Vector2) -> bool:
 		return true
 	var off := global_position - room.cell_to_pos(cell)
 	var perp := absf(off.x) if facing.y != 0 else absf(off.y)
-	if perp > 6.0:
+	if perp > 12.0:
 		return false
 	var f := Vector2(facing)
 	var dir := Vector2i.ZERO
@@ -189,14 +214,24 @@ func _attack() -> void:
 	state = State.ATTACK
 	velocity = Vector2.ZERO
 	_sword_hit.clear()
-	var f := Vector2(facing)
-	sword_hitbox.position = f * 11.0
-	slash.rotation = f.angle()
-	slash.visible = true
+	sword_hitbox.position = Vector2(facing) * float(Room.TILE)
 	sword_shape.set_deferred("disabled", false)
-	await get_tree().create_timer(SWORD_TIME).timeout
+
+	var attack_anim: StringName = ANIM_ATTACK.get(facing, &"Attack Down_right")
+	var duration := SWORD_TIME
+	if sprite != null and sprite.sprite_frames != null and sprite.sprite_frames.has_animation(attack_anim):
+		sprite.stop()
+		sprite.frame = 0
+		sprite.play(attack_anim)
+		var fps := sprite.sprite_frames.get_animation_speed(attack_anim) * absf(sprite.speed_scale)
+		if fps > 0.0:
+			var total_units := 0.0
+			for i in sprite.sprite_frames.get_frame_count(attack_anim):
+				total_units += sprite.sprite_frames.get_frame_duration(attack_anim, i)
+			duration = maxf(SWORD_TIME, total_units / fps)
+
+	await get_tree().create_timer(duration).timeout
 	sword_shape.set_deferred("disabled", true)
-	slash.visible = false
 	if state == State.ATTACK:
 		state = State.NORMAL
 
@@ -214,7 +249,7 @@ func _shoot() -> void:
 	var arrow: Arrow = ARROW_SCENE.instantiate()
 	arrow.direction = Vector2(facing)
 	room.add_child(arrow)
-	arrow.global_position = global_position + Vector2(facing) * 6.0
+	arrow.global_position = global_position + Vector2(facing) * 12.0
 	await get_tree().create_timer(BOW_TIME).timeout
 	if state == State.SHOOT:
 		state = State.NORMAL
@@ -226,7 +261,7 @@ func take_damage(amount: int, from_pos: Vector2) -> void:
 	Game.damage(amount)
 	invuln = INVULN_TIME
 	if state == State.NORMAL:
-		knock = (global_position - from_pos).normalized() * 120.0
+		knock = (global_position - from_pos).normalized() * 240.0
 		knock_time = 0.12
 	if Game.hp <= 0:
 		_die()
@@ -258,19 +293,29 @@ func _track_safe(delta: float) -> void:
 
 
 # --- Animacion -------------------------------------------------------------------------------
+func _find_animated_sprite() -> AnimatedSprite2D:
+	for child in get_children():
+		if child is AnimatedSprite2D:
+			return child
+	return null
+
+
 func _update_sprite() -> void:
-	var row := 0
-	if facing == Vector2i.UP:
-		row = 1
-	elif facing == Vector2i.LEFT:
-		row = 2
-	elif facing == Vector2i.RIGHT:
-		row = 3
-	var col := 0
-	if state == State.ATTACK:
-		col = 2
+	if sprite == null or sprite.sprite_frames == null:
+		return
+	var is_attacking := state == State.ATTACK
+	sprite.scale = _base_sprite_scale * (attack_scale_mult if is_attacking else 1.0)
+	sprite.offset = _base_sprite_offset + (attack_offset if is_attacking else Vector2.ZERO)
+
+	var anim: StringName = ANIM_IDLE.get(facing, &"iso_idle_down_right")
+	if is_attacking:
+		anim = ANIM_ATTACK.get(facing, &"Attack Down_right")
 	elif state == State.SHOOT:
-		col = 3
+		# TODO: pendiente animacion de ataque con arco
+		anim = ANIM_IDLE.get(facing, &"iso_idle_down_right")
 	elif state == State.PULL or velocity.length() > 1.0:
-		col = int(walk_clock * 8.0) % 2
-	sprite.frame = row * 4 + col
+		anim = ANIM_WALK.get(facing, &"iso_walk_down_right")
+
+	if sprite.sprite_frames.has_animation(anim):
+		if sprite.animation != anim or not sprite.is_playing():
+			sprite.play(anim)

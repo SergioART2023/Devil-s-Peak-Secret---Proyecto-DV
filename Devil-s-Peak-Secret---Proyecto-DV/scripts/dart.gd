@@ -2,7 +2,7 @@ class_name Dart
 extends Area2D
 ## Dardo de cerbatana lanzado por los enemigos tiki.
 
-const SPEED := 95.0
+const SPEED := 190.0
 
 var direction := Vector2.LEFT
 var life := 3.0

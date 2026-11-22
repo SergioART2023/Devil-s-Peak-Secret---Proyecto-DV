@@ -74,7 +74,7 @@ func _fall_sequence() -> void:
 	var tw := create_tween()
 	for i in 14:
 		tw.tween_property(room_holder, "position",
-				Vector2(randf_range(-3.0, 3.0), randf_range(-3.0, 3.0)), 0.05)
+				Vector2(randf_range(-6.0, 6.0), randf_range(-6.0, 6.0)), 0.05)
 	tw.tween_property(room_holder, "position", Vector2.ZERO, 0.05)
 	Game.show_message("¡El templo tiembla! ¡El suelo se abre!", 2.0)
 	await tw.finished

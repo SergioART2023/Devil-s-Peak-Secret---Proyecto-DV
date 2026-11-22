@@ -2,7 +2,7 @@ class_name Arrow
 extends Area2D
 ## Flecha del jugador: dana enemigos, activa interruptores y se detiene en paredes y bloques.
 
-const SPEED := 220.0
+const SPEED := 440.0
 
 var direction := Vector2.RIGHT
 var life := 1.6

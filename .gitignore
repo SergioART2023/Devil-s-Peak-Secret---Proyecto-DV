@@ -1,4 +1,48 @@
+# Fuentes locales del curso
 sources/Rúbrica proyecto final.pdf
 sources/jugador.png
 sources/Idea inicial.md
 sources/Contenido del Curso.pdf
+
+# Godot 4+
+.godot/
+*.translation
+.mono/
+data_*/
+mono_crash.*.json
+
+# Exportaciones y builds
+export/
+builds/
+build/
+export_presets.cfg
+*.exe
+*.pck
+*.apk
+*.aab
+*.ipa
+*.dmg
+*.zip
+
+# Python (herramientas en tools/)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDEs / Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs y temporales
+*.log
+*.tmp
+.env

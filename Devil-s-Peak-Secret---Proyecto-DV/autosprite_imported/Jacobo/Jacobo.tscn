@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dfexyg7k8b53o"]
+
+[ext_resource type="SpriteFrames" uid="uid://dt0cdu31k2q82" path="res://autosprite_imported/Jacobo/Jacobo_frames.tres" id="1_8md5q"]
+
+[node name="Jacobo" type="AnimatedSprite2D" unique_id=636198370]
+texture_filter = 1
+sprite_frames = ExtResource("1_8md5q")
+animation = &"bow_up"
+autoplay = "Attack Down_right"
