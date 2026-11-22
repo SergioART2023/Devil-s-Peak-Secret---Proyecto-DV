@@ -18,7 +18,9 @@ func _run() -> void:
 	get_tree().root.add_child(gs)
 	for id in RoomData.ORDER:
 		gs._load_room(id, "a")
-		gs.player.global_position = gs.room.cell_to_pos(Vector2i(4, 7))
+		gs.player.global_position = gs.room.cell_to_pos(Vector2i(7, 7) if id.begins_with("room_0") and gs.room.data["type"] == "combat" else Vector2i(4, 7))
+		if gs.room.data["type"] == "combat":
+			gs.player.invuln = 99.0
 		gs.hud.set_fade(0.0)
 		await get_tree().create_timer(1.6).timeout
 		get_viewport().get_texture().get_image().save_png(out + "shot_%s.png" % id)

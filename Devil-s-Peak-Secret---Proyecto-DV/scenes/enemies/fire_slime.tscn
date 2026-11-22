@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/fire_slime.png" id="2_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(10, 8)
+size = Vector2(14, 8)
 
 [node name="FireSlime" type="CharacterBody2D"]
 collision_layer = 4
@@ -15,8 +15,9 @@ max_hp = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_tex")
-hframes = 2
+offset = Vector2(0, -4)
+hframes = 12
+vframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_1")

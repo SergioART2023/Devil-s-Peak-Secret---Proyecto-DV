@@ -9,7 +9,7 @@ gratuitos (itch.io / OpenGameArt, revisando la licencia) y recórtalos a esta re
 |---|---|---|
 | `player/jacob.png` | 64×64 | 4 filas (abajo, arriba, izquierda, derecha) × 4 columnas (quieto, paso, ataque espada, ataque arco) |
 | `player/slash.png` | 16×16 | Espada/tajo apuntando a la **derecha** (el juego lo rota) |
-| `enemies/fire_slime.png` | 32×16 | 2 frames de rebote |
+| `enemies/fire_slime.png` | 384×64 | **Definitivo** (Autosprite). Frames de 32×32: fila 0 idle (12), fila 1 muerte (12). Se regenera con `tools/process_slime_sheets.py` desde `assets/sprites/_source/` |
 | `enemies/tiki_shooter.png` | 32×64 | 4 filas (abajo, arriba, izq., der.) × 2 columnas (quieto, soplando) |
 | `projectiles/arrow.png`, `dart.png` | 16×16 | Apuntan a la derecha |
 | `tiles/floor_a/b.png`, `wall_top.png`, `wall_face.png` | 16×16 | Piso (2 variantes), tope de pared y cara frontal |

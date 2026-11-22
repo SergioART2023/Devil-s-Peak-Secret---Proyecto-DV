@@ -426,7 +426,7 @@ def make_items():
 def main():
     print("Generando sprites provisionales en", os.path.normpath(ROOT))
     make_player()
-    make_slime()
+    # El slime definitivo se genera con tools/process_slime_sheets.py (no se sobreescribe).
     make_tiki()
     make_projectiles()
     make_tiles()

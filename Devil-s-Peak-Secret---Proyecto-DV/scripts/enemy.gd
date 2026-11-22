@@ -65,8 +65,13 @@ func _die() -> void:
 	dead = true
 	set_deferred("collision_layer", 0)
 	died.emit(self)
+	await _death_animation()
+	queue_free()
+
+
+## Animacion de muerte por defecto; los enemigos con hoja propia la sobreescriben.
+func _death_animation() -> void:
 	var tw := create_tween()
 	tw.tween_property(sprite, "scale", Vector2(1.5, 0.1), 0.25)
 	tw.parallel().tween_property(sprite, "modulate:a", 0.0, 0.25)
 	await tw.finished
-	queue_free()
