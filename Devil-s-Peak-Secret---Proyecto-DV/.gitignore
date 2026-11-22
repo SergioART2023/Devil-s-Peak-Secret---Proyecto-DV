@@ -1,0 +1,15 @@
+# Godot 4+
+.godot/
+*.translation
+# Exportaciones
+export/
+build/
+*.apk
+*.aab
+export_presets.cfg
+# Python
+__pycache__/
+*.pyc
+# Sistema
+.DS_Store
+Thumbs.db
