@@ -5,6 +5,26 @@ extends StaticBody2D
 var room: Room
 var cell := Vector2i.ZERO
 var busy := false
+var is_lit := false
+
+@onready var sprite: Sprite2D = $Sprite2D
+
+
+func _ready() -> void:
+	_apply_lit()
+
+
+func set_lit(value: bool) -> void:
+	if is_lit == value:
+		return
+	is_lit = value
+	if is_node_ready():
+		_apply_lit()
+
+
+func _apply_lit() -> void:
+	if sprite != null:
+		sprite.frame = 1 if is_lit else 0
 
 
 func setup(r: Room, c: Vector2i) -> void:
@@ -25,6 +45,7 @@ func try_push(dir: Vector2i) -> bool:
 
 func move_to(target: Vector2i, duration: float = 0.22) -> void:
 	busy = true
+	set_lit(false)
 	cell = target
 	var tw := create_tween()
 	tw.tween_property(self, "position", room.cell_to_pos(target), duration)

@@ -32,7 +32,12 @@ func _load_room(id: String, spawn: String) -> void:
 		room.queue_free()
 	current_room_id = id
 	current_spawn = spawn
-	room = Room.new()
+	var scene_path := "res://scenes/rooms/%s.tscn" % id
+	if ResourceLoader.exists(scene_path):
+		var packed: PackedScene = load(scene_path)
+		room = packed.instantiate()
+	else:
+		room = Room.new()
 	room.room_id = id
 	room.spawn_key = spawn
 	room.player = player

@@ -23,11 +23,11 @@ func _ready() -> void:
 	_apply(false)
 
 
-func set_open(value: bool) -> void:
+func set_open(value: bool, animate: bool = true) -> void:
 	var changed := is_open != value
 	is_open = value
 	if is_node_ready():
-		_apply(changed)
+		_apply(animate and changed)
 
 
 func _apply(animate: bool = true) -> void:

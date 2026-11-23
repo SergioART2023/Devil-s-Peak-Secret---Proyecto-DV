@@ -21,7 +21,7 @@ const TEX_FLOOR_B := preload("res://assets/sprites/tiles/floor_b.png")
 const TEX_WALL_TOP := preload("res://assets/sprites/tiles/wall_top.png")
 const TEX_WALL_FACE := preload("res://assets/sprites/tiles/wall_face.png")
 const TEX_LAVA := preload("res://assets/sprites/tiles/lava.png")
-const TEX_PLATE := preload("res://assets/sprites/tiles/plate.png")
+const TEX_PLATE := preload("res://assets/sprites/tiles/pressure_plate.png")
 const TEX_PEDESTAL := preload("res://assets/sprites/tiles/pedestal.png")
 const TEX_ALTAR := preload("res://assets/sprites/tiles/altar.png")
 
@@ -53,24 +53,34 @@ var lava_frame := 0
 var _lava_timer := 0.0
 var _has_lava := false
 var _unlock_announced := false
+var _is_manual := false
+var plate_sprites: Dictionary = {}
 
 
 func _ready() -> void:
-	data = RoomData.ROOMS[room_id]
-	structures = Node2D.new()
-	structures.name = "Structures"
-	add_child(structures)
-	entities = Node2D.new()
-	entities.name = "Entities"
-	entities.y_sort_enabled = true
-	add_child(entities)
+	if room_id == "":
+		room_id = "room_01"
+	data = RoomData.ROOMS.get(room_id, {"name": name, "type": "free", "exits": {}})
+	_is_manual = has_node("TileMapLayer")
+	if _is_manual:
+		_setup_manual_scene()
+	else:
+		structures = Node2D.new()
+		structures.name = "Structures"
+		add_child(structures)
+		entities = Node2D.new()
+		entities.name = "Entities"
+		entities.y_sort_enabled = true
+		add_child(entities)
 
-	_parse_layout()
-	_build_walls()
+		_parse_layout()
+		_build_walls()
+
 	_apply_initial_state()
 	_place_player()
 	Game.item_collected.connect(_on_item_collected)
-	queue_redraw()
+	if not _is_manual:
+		queue_redraw()
 
 
 # --- Utilidades de rejilla ------------------------------------------------------------------
@@ -126,6 +136,108 @@ func fill_lava(c: Vector2i, block: Block) -> void:
 
 
 # --- Construccion ---------------------------------------------------------------------------
+func _setup_manual_scene() -> void:
+	var solved := Game.solved_rooms.has(room_id)
+	structures = get_node_or_null("Structures")
+	if structures == null:
+		structures = Node2D.new()
+		structures.name = "Structures"
+		add_child(structures)
+	entities = get_node_or_null("Entities")
+	if entities == null:
+		entities = Node2D.new()
+		entities.name = "Entities"
+		entities.y_sort_enabled = true
+		add_child(entities)
+
+	# Inicializar rejilla con bordes solidos y centro transitable
+	for y in ROWS:
+		var row: Array = []
+		for x in COLS:
+			var is_border := x == 0 or y == 0 or x == COLS - 1 or y == ROWS - 1
+			row.append("#" if is_border else ".")
+		grid.append(row)
+
+	# Puntos de spawn (ignorar si quedaron en (0, 0) sin colocar)
+	if has_node("Spawns"):
+		for marker in $Spawns.get_children():
+			if marker is Node2D and marker.position != Vector2.ZERO:
+				spawns[String(marker.name)] = marker.position
+
+	# Puertas, compuertas e interruptores
+	for child in structures.get_children():
+		if child is Door:
+			var c := pos_to_cell(child.position)
+			if child.kind == "gate":
+				gates.append(child)
+				if not solved and c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
+					grid[c.y][c.x] = "g"
+			else:
+				child.entered.connect(_on_door_entered)
+				if not doors.has(child.exit_key):
+					doors[child.exit_key] = []
+				doors[child.exit_key].append(child)
+				var door_key: String = str(child.exit_key) if child.exit_key != "" else "."
+				var cs: CollisionShape2D = child.get_node_or_null("CollisionShape2D") as CollisionShape2D
+				if cs != null and cs.shape is RectangleShape2D:
+					var half: Vector2 = (cs.shape as RectangleShape2D).size * 0.5 * child.scale.abs()
+					var center: Vector2 = child.position + cs.position * child.scale
+					var c_min := pos_to_cell(center - half)
+					var c_max := pos_to_cell(center + half)
+					for cy in range(maxi(c_min.y, 0), mini(c_max.y, ROWS - 1) + 1):
+						for cx in range(maxi(c_min.x, 0), mini(c_max.x, COLS - 1) + 1):
+							grid[cy][cx] = door_key
+				elif c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
+					grid[c.y][c.x] = door_key
+		elif child is ArrowSwitch:
+			child.active = solved
+			switches.append(child)
+
+	# Placas de presion (se dibuja el sprite encima del TileMapLayer)
+	if has_node("Plates"):
+		for marker in $Plates.get_children():
+			if marker is Node2D:
+				var c := pos_to_cell(marker.position)
+				if c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
+					plates.append(c)
+					grid[c.y][c.x] = "T"
+					var spr := Sprite2D.new()
+					spr.texture = TEX_PLATE
+					spr.modulate = Color(0.75, 0.9, 0.75) if solved else Color.WHITE
+					spr.position = cell_to_pos(c)
+					structures.add_child(spr)
+					plate_sprites[c] = spr
+					if solved:
+						plates_pressed[c] = true
+
+	# Obstaculos manuales (pilares, braseros, rocas): bloquear tambien sus casillas en la rejilla
+	var obs_node := get_node_or_null("Obstacles")
+	if obs_node == null:
+		obs_node = entities.get_node_or_null("Obstacles")
+	if obs_node != null:
+		for obs in obs_node.get_children():
+			if obs is StaticBody2D:
+				var c := pos_to_cell(obs.position)
+				if c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
+					grid[c.y][c.x] = "#"
+
+	# Bloques y objetos en Entities (si ya estaba resuelta, aparecen encima de las placas)
+	var block_idx := 0
+	for child in entities.get_children():
+		if child is Block:
+			var target_cell: Vector2i = pos_to_cell(child.position)
+			var on_plate := false
+			if solved and block_idx < plates.size():
+				target_cell = plates[block_idx]
+				on_plate = true
+			child.setup(self, target_cell)
+			child.set_lit(on_plate)
+			blocks.append(child)
+			block_idx += 1
+
+	_build_walls()
+
+
 func _parse_layout() -> void:
 	var solved := Game.solved_rooms.has(room_id)
 	var cleared := Game.cleared_rooms.has(room_id)
@@ -264,9 +376,9 @@ func _apply_initial_state() -> void:
 	puzzle_done = Game.solved_rooms.has(room_id)
 	for key in doors:
 		for d in doors[key]:
-			d.set_open(true)
+			d.set_open(true, false)
 	for g in gates:
-		g.set_open(puzzle_done)
+		g.set_open(puzzle_done, false)
 	match data["type"]:
 		"puzzle":
 			_update_locks(false)
@@ -280,6 +392,8 @@ func _apply_initial_state() -> void:
 
 
 func _place_player() -> void:
+	if player == null:
+		return
 	var pos: Vector2 = spawns.get(spawn_key, spawns.get("a", Vector2(COLS * TILE / 2.0, ROWS * TILE / 2.0)))
 	entry_pos = pos
 	player.room = self
@@ -300,7 +414,7 @@ func _update_locks(announce: bool) -> void:
 	for key in data.get("locked_exits", []):
 		any_locked = true
 		for d in doors.get(key, []):
-			d.set_open(unlocked)
+			d.set_open(unlocked, announce)
 	if announce and any_locked and unlocked and not _unlock_announced:
 		_unlock_announced = true
 		Game.show_message("La puerta se abrió.")
@@ -316,8 +430,22 @@ func _solve_puzzle() -> void:
 	for g in gates:
 		g.set_open(true)
 		var c := pos_to_cell(g.position)
-		grid[c.y][c.x] = "."   # la casilla de la compuerta pasa a ser transitable
+		if c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
+			grid[c.y][c.x] = "."   # la casilla de la compuerta pasa a ser transitable
 	Game.show_message("¡Se abrió una compuerta!")
+	_update_locks(true)
+
+
+func _unsolve_puzzle() -> void:
+	puzzle_done = false
+	_unlock_announced = false
+	Game.solved_rooms.erase(room_id)
+	for g in gates:
+		g.set_open(false)
+		var c := pos_to_cell(g.position)
+		if c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
+			grid[c.y][c.x] = "g"
+	Game.show_message("La compuerta se cerró.")
 	_update_locks(true)
 
 
@@ -369,7 +497,7 @@ func _physics_process(_delta: float) -> void:
 	if state == State.WAITING and player != null \
 			and player.global_position.distance_to(entry_pos) > TILE * 2.75:
 		_start_combat()
-	if not puzzle_done and (plates.size() > 0 or switches.size() > 0):
+	if plates.size() > 0 or (not puzzle_done and switches.size() > 0):
 		_check_puzzle()
 
 
@@ -381,16 +509,23 @@ func _check_puzzle() -> void:
 		var pressed := b != null and not b.busy
 		if plates_pressed.get(p, false) != pressed:
 			plates_pressed[p] = pressed
+			if plate_sprites.has(p) and is_instance_valid(plate_sprites[p]):
+				plate_sprites[p].modulate = Color(0.75, 0.9, 0.75) if pressed else Color.WHITE
 			changed = true
 		if not pressed:
 			all_ok = false
+	for b in blocks:
+		if is_instance_valid(b):
+			b.set_lit(not b.busy and b.cell in plates)
 	for s in switches:
 		if not s.active:
 			all_ok = false
 	if changed:
 		queue_redraw()
-	if all_ok:
+	if all_ok and not puzzle_done:
 		_solve_puzzle()
+	elif not all_ok and puzzle_done:
+		_unsolve_puzzle()
 
 
 func _process(delta: float) -> void:
@@ -403,7 +538,10 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
+	if _is_manual:
+		return
 	var tile_size := Vector2(TILE, TILE)
+	var altars: Array[Vector2] = []
 	for y in ROWS:
 		for x in COLS:
 			var ch: String = grid[y][x]
@@ -420,7 +558,9 @@ func _draw() -> void:
 					"P":
 						draw_texture_rect(TEX_PEDESTAL, dest, false)
 					"A":
-						draw_texture_rect(TEX_ALTAR, dest, false)
+						altars.append(pos)
 					"T":
-						var f := 1 if plates_pressed.get(Vector2i(x, y), false) else 0
-						draw_texture_rect_region(TEX_PLATE, dest, Rect2(f * 16, 0, 16, 16))
+						draw_texture_rect(TEX_PLATE, dest, false)
+	for pos in altars:
+		var altar_rect := Rect2(pos - Vector2(TILE * 0.5, TILE * 0.5), Vector2(TILE * 2, TILE * 2))
+		draw_texture_rect(TEX_ALTAR, altar_rect, false)
