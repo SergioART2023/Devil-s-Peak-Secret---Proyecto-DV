@@ -5,5 +5,5 @@
 [node name="Jacobo" type="AnimatedSprite2D" unique_id=636198370]
 texture_filter = 1
 sprite_frames = ExtResource("1_8md5q")
-animation = &"bow_up"
+animation = &"Bow_Attack_Right"
 autoplay = "Attack Down_right"

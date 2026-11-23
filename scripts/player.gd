@@ -33,9 +33,16 @@ const ANIM_ATTACK := {
 	Vector2i.LEFT: &"Attack Left_right",
 	Vector2i.RIGHT: &"Attack Right_right",
 }
+const ANIM_SHOOT := {
+	Vector2i.DOWN: &"Bow_Attack_Down",
+	Vector2i.UP: &"Bow_Attack_Up",
+	Vector2i.LEFT: &"Bow_Attack_Left",
+	Vector2i.RIGHT: &"Bow_Attack_Right",
+}
 
 @export var attack_scale_mult := 1.34
 @export var attack_offset := Vector2.ZERO
+@export var bow_scale_mult := 1.0
 
 @onready var sprite: AnimatedSprite2D = _find_animated_sprite()
 @onready var sword_hitbox: Area2D = $SwordHitbox
@@ -250,7 +257,22 @@ func _shoot() -> void:
 	arrow.direction = Vector2(facing)
 	room.add_child(arrow)
 	arrow.global_position = global_position + Vector2(facing) * 12.0
-	await get_tree().create_timer(BOW_TIME).timeout
+
+	var shoot_anim: StringName = ANIM_SHOOT.get(facing, &"Bow_Attack_Down")
+	var duration := BOW_TIME
+	if sprite != null and sprite.sprite_frames != null and sprite.sprite_frames.has_animation(shoot_anim):
+		sprite.stop()
+		sprite.frame = 0
+		sprite.play(shoot_anim)
+		var fps := sprite.sprite_frames.get_animation_speed(shoot_anim) * absf(sprite.speed_scale)
+		if fps > 0.0:
+			var total_units := 0.0
+			for i in sprite.sprite_frames.get_frame_count(shoot_anim):
+				total_units += sprite.sprite_frames.get_frame_duration(shoot_anim, i)
+			duration = maxf(BOW_TIME, total_units / fps)
+	bow_cd = maxf(BOW_COOLDOWN, duration)
+
+	await get_tree().create_timer(duration).timeout
 	if state == State.SHOOT:
 		state = State.NORMAL
 
@@ -304,15 +326,16 @@ func _update_sprite() -> void:
 	if sprite == null or sprite.sprite_frames == null:
 		return
 	var is_attacking := state == State.ATTACK
-	sprite.scale = _base_sprite_scale * (attack_scale_mult if is_attacking else 1.0)
+	var is_shooting := state == State.SHOOT
+	var scale_mult := attack_scale_mult if is_attacking else (bow_scale_mult if is_shooting else 1.0)
+	sprite.scale = _base_sprite_scale * scale_mult
 	sprite.offset = _base_sprite_offset + (attack_offset if is_attacking else Vector2.ZERO)
 
 	var anim: StringName = ANIM_IDLE.get(facing, &"iso_idle_down_right")
 	if is_attacking:
 		anim = ANIM_ATTACK.get(facing, &"Attack Down_right")
-	elif state == State.SHOOT:
-		# TODO: pendiente animacion de ataque con arco
-		anim = ANIM_IDLE.get(facing, &"iso_idle_down_right")
+	elif is_shooting:
+		anim = ANIM_SHOOT.get(facing, &"Bow_Attack_Down")
 	elif state == State.PULL or velocity.length() > 1.0:
 		anim = ANIM_WALK.get(facing, &"iso_walk_down_right")
 
