@@ -1,0 +1,74 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/volcanic_boulder.gd" id="1_boulder"]
+[ext_resource type="Texture2D" path="res://assets/sprites/projectiles/volcanic_boulder.png" id="2_tex"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b0"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b1"]
+atlas = ExtResource("2_tex")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b2"]
+atlas = ExtResource("2_tex")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b3"]
+atlas = ExtResource("2_tex")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_boulder"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b3")
+}],
+"loop": true,
+"name": &"roll",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
+radius = 20.0
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fire"]
+gradient = SubResource("Gradient_fire")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="VolcanicBoulder" type="Area2D"]
+collision_layer = 0
+collision_mask = 3
+script = ExtResource("1_boulder")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.9, 1.9)
+sprite_frames = SubResource("SpriteFrames_boulder")
+animation = &"roll"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CircleShape2D_hit")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.45, 0.12, 1)
+energy = 1.6
+texture = SubResource("GradientTexture2D_fire")
+texture_scale = 1.5

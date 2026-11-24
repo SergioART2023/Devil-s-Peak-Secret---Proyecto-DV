@@ -1,0 +1,31 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/boulder_spawner.gd" id="1_spawner"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/boulder_chute.png" id="2_tex"]
+
+[sub_resource type="Gradient" id="Gradient_warn"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_warn"]
+gradient = SubResource("Gradient_warn")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="BoulderSpawner" type="Node2D"]
+script = ExtResource("1_spawner")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.5, 1.3)
+texture = ExtResource("2_tex")
+hframes = 2
+
+[node name="WarnLight" type="PointLight2D" parent="."]
+visible = false
+position = Vector2(0, 6)
+color = Color(1, 0.42, 0.1, 1)
+energy = 1.8
+texture = SubResource("GradientTexture2D_warn")
+texture_scale = 1.3
