@@ -167,9 +167,10 @@ func _setup_manual_scene() -> void:
 				continue
 			var src_id := tml.get_cell_source_id(cell)
 			var src := tml.tile_set.get_source(src_id) as TileSetAtlasSource
-			if src != null and src.texture != null and src.texture.resource_path.ends_with("volcanoe_tiles.png"):
+			if src != null and src.texture != null:
+				var tex_path := src.texture.resource_path
 				var ac := tml.get_cell_atlas_coords(cell)
-				if ac.x >= 14:
+				if tex_path.ends_with("lava_anim.png") or (tex_path.ends_with("volcanoe_tiles.png") and ac.x >= 14):
 					grid[cell.y][cell.x] = "~"
 					_has_lava = true
 		if solved:
