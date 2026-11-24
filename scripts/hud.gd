@@ -10,10 +10,17 @@ signal dev_room_requested(room_id: String)
 const VIEW_W := Room.COLS * Room.TILE
 const VIEW_H := Room.ROWS * Room.TILE
 const HUD_MARGIN := 12
-const ITEM_SLOT_W := 56
+const ITEM_ICON_SIZE := 64
+const KEY_ICON_SIZE := 32
+const KEY_GAP := 4
+const ITEM_SLOT_W := ITEM_ICON_SIZE + KEY_GAP + KEY_ICON_SIZE
+const ITEM_GAP := 8
 const HEARTS_TEX := preload("res://assets/sprites/ui/hearts.png")
 const SWORD_TEX := preload("res://assets/sprites/items/sword.png")
 const BOW_TEX := preload("res://assets/sprites/items/bow.png")
+const BUTTON_J_TEX := preload("res://assets/sprites/items/buttonj.png")
+const BUTTON_K_TEX := preload("res://assets/sprites/items/buttonk.png")
+const LOSE_SCREEN_TEX := preload("res://assets/ui/losescreen.png")
 
 var hearts: HeartsRow
 var items: ItemsRow
@@ -38,23 +45,16 @@ class HeartsRow extends Control:
 
 
 class ItemsRow extends Control:
-	var sword_tex: Texture2D
-	var bow_tex: Texture2D
-
 	func _draw() -> void:
-		var font := ThemeDB.fallback_font
-		var x := size.x - ITEM_SLOT_W
-		if Game.has_item("bow"):
-			_draw_item(bow_tex, "K", x, font)
-			x -= ITEM_SLOT_W
 		if Game.has_item("sword"):
-			_draw_item(sword_tex, "J", x, font)
+			_draw_item(SWORD_TEX, BUTTON_J_TEX, 0)
+		if Game.has_item("bow"):
+			_draw_item(BOW_TEX, BUTTON_K_TEX, ITEM_SLOT_W + ITEM_GAP)
 
-	func _draw_item(texture: Texture2D, key: String, x: float, font: Font) -> void:
-		draw_texture_rect(texture, Rect2(x, 0, 32, 32), false)
-		var key_position := Vector2(x + 34, 26)
-		draw_string_outline(font, key_position, key, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, 4, Color.BLACK)
-		draw_string(font, key_position, key, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
+	func _draw_item(texture: Texture2D, key: Texture2D, x: float) -> void:
+		draw_texture_rect(texture, Rect2(x, 0, ITEM_ICON_SIZE, ITEM_ICON_SIZE), false)
+		draw_texture_rect(key, Rect2(x + ITEM_ICON_SIZE + KEY_GAP,
+			ITEM_ICON_SIZE - KEY_ICON_SIZE, KEY_ICON_SIZE, KEY_ICON_SIZE), false)
 
 
 func _ready() -> void:
@@ -67,10 +67,8 @@ func _ready() -> void:
 	add_child(hearts)
 
 	items = ItemsRow.new()
-	items.sword_tex = SWORD_TEX
-	items.bow_tex = BOW_TEX
-	items.position = Vector2(VIEW_W - HUD_MARGIN - 2 * ITEM_SLOT_W, HUD_MARGIN)
-	items.size = Vector2(2 * ITEM_SLOT_W, 32)
+	items.size = Vector2(2 * ITEM_SLOT_W + ITEM_GAP, ITEM_ICON_SIZE)
+	items.position = Vector2(VIEW_W - HUD_MARGIN - items.size.x, HUD_MARGIN)
 	items.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(items)
 
@@ -185,26 +183,28 @@ func _make_label(pos: Vector2, font_size: int) -> Label:
 
 
 func _build_game_over() -> void:
-	over_panel = Control.new()
+	var background := ColorRect.new()
+	background.color = Color.BLACK
+	background.size = Vector2(VIEW_W, VIEW_H)
+	over_panel = background
 	over_panel.visible = false
 	add_child(over_panel)
-	var bg := ColorRect.new()
-	bg.color = Color(0.25, 0.0, 0.0, 0.75)
-	bg.size = Vector2(VIEW_W, VIEW_H)
-	over_panel.add_child(bg)
-	var t := Label.new()
-	t.text = "HAS CAÍDO EN EL TEMPLO"
-	t.position = Vector2(0, 200)
-	t.size = Vector2(VIEW_W, 60)
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	t.add_theme_font_size_override("font_size", 44)
-	over_panel.add_child(t)
+
+	var artwork := TextureRect.new()
+	artwork.texture = LOSE_SCREEN_TEX
+	artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	artwork.size = Vector2(VIEW_W, VIEW_H)
+	over_panel.add_child(artwork)
+
 	var s := Label.new()
 	s.text = "Presiona ENTER para reintentar la sala"
-	s.position = Vector2(0, 272)
+	s.position = Vector2(0, VIEW_H - 48)
 	s.size = Vector2(VIEW_W, 40)
 	s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	s.add_theme_font_size_override("font_size", 24)
+	s.add_theme_color_override("font_outline_color", Color.BLACK)
+	s.add_theme_constant_override("outline_size", 6)
 	over_panel.add_child(s)
 
 
@@ -228,6 +228,8 @@ func show_room_title(text: String) -> void:
 		_title_tween.kill()
 	title_label.text = text
 	title_label.modulate.a = 0.0
+	if text.is_empty():
+		return
 	_title_tween = create_tween()
 	_title_tween.tween_property(title_label, "modulate:a", 1.0, 0.4)
 	_title_tween.tween_interval(1.4)

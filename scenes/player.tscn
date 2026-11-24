@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cicd5cnl8sani" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="SpriteFrames" uid="uid://dt0cdu31k2q82" path="res://autosprite_imported/Jacobo/Jacobo_frames.tres" id="2_qhqgy"]
-[ext_resource type="Texture2D" path="res://assets/sprites/items/sword.png" id="3_sword"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/sword_equipped.png" id="3_sword"]
 [ext_resource type="Texture2D" path="res://assets/sprites/items/Bow-spritesheet.png" id="4_bow"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]

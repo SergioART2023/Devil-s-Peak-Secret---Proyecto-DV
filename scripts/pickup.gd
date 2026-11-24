@@ -3,8 +3,8 @@ extends Area2D
 ## Objeto recogible: espada, arco, esmeralda o corazon.
 
 const SCALES := {
-	"sword": Vector2(0.18, 0.18),
-	"bow": Vector2(0.18, 0.18),
+	"sword": Vector2.ONE,
+	"bow": Vector2.ONE,
 	"emerald": Vector2(1.5, 1.5),
 	"heart": Vector2(2.0, 2.0),
 }
@@ -28,12 +28,9 @@ func _ready() -> void:
 		queue_free()
 		return
 	body_entered.connect(_on_body_entered)
-	# Flotar suavemente para objetos de 1 solo frame (la espada ya flota en su spritesheet)
-	if sprite.sprite_frames == null or not sprite.sprite_frames.has_animation(item_id) \
-			or sprite.sprite_frames.get_frame_count(item_id) <= 1:
-		var tw := create_tween().set_loops()
-		tw.tween_property(sprite, "position:y", -3.0, 0.7).set_trans(Tween.TRANS_SINE)
-		tw.tween_property(sprite, "position:y", 0.0, 0.7).set_trans(Tween.TRANS_SINE)
+	var tw := create_tween().set_loops().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(sprite, "position:y", -3.0, 0.7)
+	tw.tween_property(sprite, "position:y", 0.0, 0.7)
 
 
 func _apply_visual() -> void:
