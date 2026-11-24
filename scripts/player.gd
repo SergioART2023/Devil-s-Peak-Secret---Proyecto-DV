@@ -47,6 +47,8 @@ const ANIM_SHOOT := {
 @onready var sprite: AnimatedSprite2D = _find_animated_sprite()
 @onready var sword_hitbox: Area2D = $SwordHitbox
 @onready var sword_shape: CollisionShape2D = $SwordHitbox/CollisionShape2D
+@onready var back_sword: Sprite2D = get_node_or_null("BackSword")
+@onready var back_bow: Sprite2D = get_node_or_null("BackBow")
 
 var room: Room
 var facing := Vector2i.DOWN
@@ -352,3 +354,59 @@ func _update_sprite() -> void:
 	if sprite.sprite_frames.has_animation(anim):
 		if sprite.animation != anim or not sprite.is_playing():
 			sprite.play(anim)
+	_update_back_gear()
+
+
+func _update_back_gear() -> void:
+	var bob := sin(walk_clock * 14.0) * 1.0 if velocity.length() > 1.0 else 0.0
+	if back_sword != null:
+		back_sword.visible = Game.has_item("sword") and state != State.ATTACK
+		if back_sword.visible:
+			back_sword.modulate = sprite.modulate
+			match facing:
+				Vector2i.UP:
+					back_sword.z_index = 1
+					back_sword.position = Vector2(-7.0, 8.0 + bob)
+					back_sword.rotation_degrees = 170.0
+					back_sword.flip_h = false
+				Vector2i.DOWN:
+					back_sword.z_index = 1
+					back_sword.position = Vector2(7.0, 8.0 + bob)
+					back_sword.rotation_degrees = 100.0
+					back_sword.flip_h = false
+				Vector2i.LEFT:
+					back_sword.z_index = 1
+					back_sword.position = Vector2(2.0, 8.0 + bob)
+					back_sword.rotation_degrees = 110.0
+					back_sword.flip_h = false
+				Vector2i.RIGHT:
+					back_sword.z_index = -1
+					back_sword.position = Vector2(-3.0, 8.0 + bob)
+					back_sword.rotation_degrees = 160.0
+					back_sword.flip_h = false
+
+	if back_bow != null:
+		back_bow.visible = Game.has_item("bow") and state != State.SHOOT
+		if back_bow.visible:
+			back_bow.modulate = sprite.modulate
+			match facing:
+				Vector2i.UP:
+					back_bow.z_index = 1
+					back_bow.position = Vector2(0.0, 1.0 + bob)
+					back_bow.rotation_degrees = -18.0
+					back_bow.flip_h = false
+				Vector2i.DOWN:
+					back_bow.z_index = -1
+					back_bow.position = Vector2(0.0, -2.0 + bob)
+					back_bow.rotation_degrees = 18.0
+					back_bow.flip_h = true
+				Vector2i.LEFT:
+					back_bow.z_index = -1
+					back_bow.position = Vector2(5.0, 0.0 + bob)
+					back_bow.rotation_degrees = 12.0
+					back_bow.flip_h = false
+				Vector2i.RIGHT:
+					back_bow.z_index = -1
+					back_bow.position = Vector2(-5.0, 0.0 + bob)
+					back_bow.rotation_degrees = -12.0
+					back_bow.flip_h = true
