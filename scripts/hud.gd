@@ -3,6 +3,10 @@ extends CanvasLayer
 ## Interfaz: corazones, objetos, mensajes, titulo de sala, fundidos y pantalla de derrota.
 ## Se construye por codigo para mantener la escena simple.
 
+# --- DEV: poner en false para ocultar/quitar los botones de teletransporte entre salas ---
+const DEV_ROOM_NAV := false
+signal dev_room_requested(room_id: String)
+
 const VIEW_W := 960
 const VIEW_H := 544
 const BAR_H := 32
@@ -69,6 +73,9 @@ func _ready() -> void:
 	items.size = Vector2(160, BAR_H)
 	add_child(items)
 
+	if DEV_ROOM_NAV:
+		_build_dev_room_nav()
+
 	msg_label = _make_label(Vector2(0, BAR_Y - 48), 20)
 	msg_label.modulate.a = 0.0
 	title_label = _make_label(Vector2(0, 200), 36)
@@ -86,6 +93,40 @@ func _ready() -> void:
 	Game.inventory_changed.connect(items.queue_redraw)
 	Game.message_requested.connect(show_message)
 	_on_hp_changed(Game.hp, Game.MAX_HP)
+
+
+# --- DEV: botones de navegacion rapida entre salas (borrar junto con DEV_ROOM_NAV) ---
+func _build_dev_room_nav() -> void:
+	var row := HBoxContainer.new()
+	row.position = Vector2(250, BAR_Y + 3)
+	row.size = Vector2(460, BAR_H - 6)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 6)
+	add_child(row)
+
+	for i in RoomData.ORDER.size():
+		var rid: String = RoomData.ORDER[i]
+		var btn := Button.new()
+		btn.text = "R%d" % i
+		btn.tooltip_text = "%s (%s)" % [rid, RoomData.ROOMS[rid]["name"]]
+		btn.custom_minimum_size = Vector2(44, 24)
+		btn.focus_mode = Control.FOCUS_NONE
+		btn.add_theme_font_size_override("font_size", 12)
+		btn.pressed.connect(func() -> void: dev_room_requested.emit(rid))
+		row.add_child(btn)
+
+	var gear_btn := Button.new()
+	gear_btn.text = "+Gear"
+	gear_btn.tooltip_text = "Equipar espada y arco (DEV)"
+	gear_btn.custom_minimum_size = Vector2(56, 24)
+	gear_btn.focus_mode = Control.FOCUS_NONE
+	gear_btn.add_theme_font_size_override("font_size", 12)
+	gear_btn.pressed.connect(func() -> void:
+		Game.give_item("sword")
+		Game.give_item("bow")
+		Game.show_message("DEV: Espada y arco equipados.", 1.5)
+	)
+	row.add_child(gear_btn)
 
 
 func _make_label(pos: Vector2, font_size: int) -> Label:

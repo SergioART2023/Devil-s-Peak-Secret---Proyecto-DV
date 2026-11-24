@@ -19,9 +19,18 @@ func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
 	player.died.connect(_on_player_died)
 	Game.item_collected.connect(_on_item_collected)
+	hud.dev_room_requested.connect(_on_dev_room_requested)
 	hud.set_fade(1.0)
 	_load_room(Game.start_room, Game.start_spawn)
 	hud.fade_in(0.6)
+
+
+func _on_dev_room_requested(id: String) -> void:
+	if transitioning:
+		return
+	game_over = false
+	hud.show_game_over(false)
+	_load_room(id, "a")
 
 
 func _load_room(id: String, spawn: String) -> void:

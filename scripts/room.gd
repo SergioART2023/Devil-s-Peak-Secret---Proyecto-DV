@@ -249,6 +249,14 @@ func _setup_manual_scene() -> void:
 			blocks.append(child)
 			block_idx += 1
 
+	# Puntos de aparicion de enemigos para salas manuales de combate
+	if not Game.cleared_rooms.has(room_id) and has_node("EnemySpawns"):
+		for marker in $EnemySpawns.get_children():
+			if marker is Node2D:
+				var mname := String(marker.name).to_lower()
+				var kind := "k" if mname.begins_with("tiki") else "m"
+				enemy_spawns.append({"cell": pos_to_cell(marker.position), "kind": kind})
+
 	_build_walls()
 
 

@@ -1,0 +1,441 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/room.gd" id="1_room"]
+[ext_resource type="Texture2D" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/tiles/ground-tiles-32x32.png" id="2_gtiles"]
+[ext_resource type="Texture2D" path="res://assets/environments/volcanoe_tileset_and_assets/volcanoe_tiles.png" id="2_vtiles"]
+[ext_resource type="Texture2D" path="res://assets/environments/volcanoe_tileset_and_assets/volcanoe_assets.png" id="3_vassets"]
+[ext_resource type="Texture2D" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/assets/stones.png" id="4_stones"]
+[ext_resource type="Texture2D" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/assets/assets-all.png" id="5_cassets"]
+[ext_resource type="PackedScene" path="res://scenes/objects/side_door.tscn" id="6_sdoor"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ground"]
+texture = ExtResource("2_gtiles")
+texture_region_size = Vector2i(32, 32)
+1:1/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+0:5/0 = 0
+2:5/0 = 0
+4:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+5:6/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_volc"]
+texture = ExtResource("2_vtiles")
+texture_region_size = Vector2i(32, 32)
+16:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_room02"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_ground")
+sources/1 = SubResource("TileSetAtlasSource_volc")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pillar"]
+size = Vector2(30, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_north"]
+size = Vector2(960, 32)
+
+[sub_resource type="Gradient" id="Gradient_light"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+width = 160
+height = 160
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Room02" type="Node2D"]
+script = ExtResource("1_room")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+z_index = -2
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAQAAAABAAAAAAABAAQAAAACAAAAAAABAAQAAAADAAAAAAABAAQAAAAEAAAAAAABAAQAAAAFAAAAAAABAAQAAAAGAAAAAAABAAQAAAAHAAAAAAABAAQAAAAIAAAAAAABAAQAAAAJAAAAAAABAAQAAAAKAAAAAAABAAQAAAALAAAAAAABAAQAAAAMAAAAAAABAAQAAAANAAAAAAABAAQAAAAOAAAAAAABAAQAAAAPAAAAAAABAAQAAAAQAAAAAAABAAQAAAARAAAAAAABAAQAAAASAAAAAAABAAQAAAATAAAAAAABAAQAAAAUAAAAAAABAAQAAAAVAAAAAAABAAQAAAAWAAAAAAABAAQAAAAXAAAAAAABAAQAAAAYAAAAAAABAAQAAAAZAAAAAAABAAQAAAAaAAAAAAABAAQAAAAbAAAAAAABAAQAAAAcAAAAAAABAAQAAAAdAAAAAAACAAQAAAAAAAEAAAAAAAUAAAABAAEAAAABAAEAAAACAAEAAAAEAAUAAAADAAEAAAABAAEAAAAEAAEAAAABAAEAAAAFAAEAAAABAAEAAAAGAAEAAAABAAEAAAAHAAEAAAABAAEAAAAIAAEAAAABAAEAAAAJAAEAAAAFAAYAAAAKAAEAAAABAAEAAAALAAEAAAAEAAUAAAAMAAEAAAABAAEAAAANAAEAAAABAAEAAAAOAAEAAAABAAEAAAAPAAEAAAABAAEAAAAQAAEAAAABAAEAAAARAAEAAAABAAEAAAASAAEAAAABAAEAAAATAAEAAAABAAEAAAAUAAEAAAAEAAUAAAAVAAEAAAABAAEAAAAWAAEAAAAFAAYAAAAXAAEAAAABAAEAAAAYAAEAAAABAAEAAAAZAAEAAAABAAEAAAAaAAEAAAABAAEAAAAbAAEAAAABAAEAAAAcAAEAAAABAAEAAAAdAAEAAAACAAUAAAAAAAIAAAAAAAUAAAABAAIAAAABAAEAAAACAAIAAAABAAEAAAADAAIAAAABAAEAAAAEAAIAAAAEAAUAAAAFAAIAAAAFAAYAAAAGAAIAAAABAAEAAAAHAAIAAAABAAEAAAAIAAIAAAABAAEAAAAJAAIAAAABAAEAAAAKAAIAAAABAAEAAAALAAIAAAABAAEAAAAMAAIAAQAQAAEAAAANAAIAAQAQAAEAAAAOAAIAAQAQAAEAAAAPAAIAAQAQAAEAAAAQAAIAAQAQAAEAAAARAAIAAQAQAAEAAAASAAIAAAAFAAYAAAATAAIAAAABAAEAAAAUAAIAAAABAAEAAAAVAAIAAQAQAAEAAAAWAAIAAQAQAAEAAAAXAAIAAAABAAEAAAAYAAIAAAABAAEAAAAZAAIAAAABAAEAAAAaAAIAAAABAAEAAAAbAAIAAAABAAEAAAAcAAIAAAABAAEAAAAdAAIAAAACAAUAAAAAAAMAAAAAAAUAAAABAAMAAAAFAAYAAAACAAMAAAABAAEAAAADAAMAAQAQAAEAAAAEAAMAAQAQAAEAAAAFAAMAAAABAAEAAAAGAAMAAAAEAAUAAAAHAAMAAAABAAEAAAAIAAMAAAABAAEAAAAJAAMAAAABAAEAAAAKAAMAAAABAAEAAAALAAMAAAABAAEAAAAMAAMAAQAQAAEAAAANAAMAAQAQAAEAAAAOAAMAAQAQAAEAAAAPAAMAAQAQAAEAAAAQAAMAAQAQAAEAAAARAAMAAQAQAAEAAAASAAMAAAABAAEAAAATAAMAAAABAAEAAAAUAAMAAAABAAEAAAAVAAMAAQAQAAEAAAAWAAMAAQAQAAEAAAAXAAMAAAABAAEAAAAYAAMAAAAEAAUAAAAZAAMAAAABAAEAAAAaAAMAAAABAAEAAAAbAAMAAAAFAAYAAAAcAAMAAAABAAEAAAAdAAMAAAACAAUAAAAAAAQAAAAAAAUAAAABAAQAAAABAAEAAAACAAQAAAABAAEAAAADAAQAAAABAAEAAAAEAAQAAAABAAEAAAAFAAQAAAABAAEAAAAGAAQAAAABAAEAAAAHAAQAAAABAAEAAAAIAAQAAAAEAAUAAAAJAAQAAAABAAEAAAAKAAQAAAAFAAYAAAALAAQAAAABAAEAAAAMAAQAAAABAAEAAAANAAQAAAABAAEAAAAOAAQAAAABAAEAAAAPAAQAAAABAAEAAAAQAAQAAAABAAEAAAARAAQAAAAEAAUAAAASAAQAAAABAAEAAAATAAQAAAABAAEAAAAUAAQAAAABAAEAAAAVAAQAAQAQAAEAAAAWAAQAAQAQAAEAAAAXAAQAAAAFAAYAAAAYAAQAAAABAAEAAAAZAAQAAAABAAEAAAAaAAQAAAAEAAUAAAAbAAQAAAABAAEAAAAcAAQAAAABAAEAAAAdAAQAAAACAAUAAAAAAAUAAAAAAAUAAAABAAUAAAAEAAUAAAACAAUAAAABAAEAAAADAAUAAAABAAEAAAAEAAUAAAABAAEAAAAFAAUAAAABAAEAAAAGAAUAAAAFAAYAAAAHAAUAAAABAAEAAAAIAAUAAAABAAEAAAAJAAUAAAABAAEAAAAKAAUAAAAEAAUAAAALAAUAAAABAAEAAAAMAAUAAAABAAEAAAANAAUAAAABAAEAAAAOAAUAAAABAAEAAAAPAAUAAAABAAEAAAAQAAUAAAABAAEAAAARAAUAAAABAAEAAAASAAUAAAABAAEAAAATAAUAAAAEAAUAAAAUAAUAAAABAAEAAAAVAAUAAQAQAAEAAAAWAAUAAQAQAAEAAAAXAAUAAAABAAEAAAAYAAUAAAABAAEAAAAZAAUAAAABAAEAAAAaAAUAAAABAAEAAAAbAAUAAAABAAEAAAAcAAUAAAAEAAUAAAAdAAUAAAACAAUAAAAAAAYAAAAAAAUAAAABAAYAAAABAAEAAAACAAYAAAAFAAYAAAADAAYAAAAEAAUAAAAEAAYAAAABAAEAAAAFAAYAAAABAAEAAAAGAAYAAAABAAEAAAAHAAYAAAABAAEAAAAIAAYAAAABAAEAAAAJAAYAAAABAAEAAAAKAAYAAAABAAEAAAALAAYAAAABAAEAAAAMAAYAAAAEAAUAAAANAAYAAAABAAEAAAAOAAYAAAABAAEAAAAPAAYAAAAFAAYAAAAQAAYAAAABAAEAAAARAAYAAAABAAEAAAASAAYAAAABAAEAAAATAAYAAAABAAEAAAAUAAYAAAABAAEAAAAVAAYAAAAEAAUAAAAWAAYAAAABAAEAAAAXAAYAAAABAAEAAAAYAAYAAAABAAEAAAAZAAYAAAABAAEAAAAaAAYAAAABAAEAAAAbAAYAAAABAAEAAAAcAAYAAAAFAAYAAAAdAAYAAAACAAUAAAAAAAcAAAAAAAUAAAABAAcAAAABAAEAAAACAAcAAAABAAEAAAADAAcAAAABAAEAAAAEAAcAAAABAAEAAAAFAAcAAAAEAAUAAAAGAAcAAAABAAEAAAAHAAcAAAABAAEAAAAIAAcAAAABAAEAAAAJAAcAAAABAAEAAAAKAAcAAAABAAEAAAALAAcAAAAFAAYAAAAMAAcAAAABAAEAAAANAAcAAAABAAEAAAAOAAcAAAAEAAUAAAAPAAcAAAABAAEAAAAQAAcAAAABAAEAAAARAAcAAAABAAEAAAASAAcAAAABAAEAAAATAAcAAAABAAEAAAAUAAcAAAABAAEAAAAVAAcAAAABAAEAAAAWAAcAAAABAAEAAAAXAAcAAAAEAAUAAAAYAAcAAAAFAAYAAAAZAAcAAAABAAEAAAAaAAcAAAABAAEAAAAbAAcAAAABAAEAAAAcAAcAAAABAAEAAAAdAAcAAAACAAUAAAAAAAgAAAAAAAUAAAABAAgAAAABAAEAAAACAAgAAAABAAEAAAADAAgAAAABAAEAAAAEAAgAAAABAAEAAAAFAAgAAAABAAEAAAAGAAgAAAABAAEAAAAHAAgAAAAEAAUAAAAIAAgAAAABAAEAAAAJAAgAAAABAAEAAAAKAAgAAAABAAEAAAALAAgAAAABAAEAAAAMAAgAAAABAAEAAAANAAgAAAABAAEAAAAOAAgAAAABAAEAAAAPAAgAAAABAAEAAAAQAAgAAAAEAAUAAAARAAgAAAABAAEAAAASAAgAAAABAAEAAAATAAgAAAABAAEAAAAUAAgAAAAFAAYAAAAVAAgAAAABAAEAAAAWAAgAAAABAAEAAAAXAAgAAAABAAEAAAAYAAgAAAABAAEAAAAZAAgAAAAEAAUAAAAaAAgAAAABAAEAAAAbAAgAAAABAAEAAAAcAAgAAAABAAEAAAAdAAgAAAACAAUAAAAAAAkAAAAAAAUAAAABAAkAAAABAAEAAAACAAkAAAABAAEAAAADAAkAAAAFAAYAAAAEAAkAAAABAAEAAAAFAAkAAAABAAEAAAAGAAkAAAABAAEAAAAHAAkAAAABAAEAAAAIAAkAAAABAAEAAAAJAAkAAAAEAAUAAAAKAAkAAAABAAEAAAALAAkAAAABAAEAAAAMAAkAAAABAAEAAAANAAkAAAABAAEAAAAOAAkAAAABAAEAAAAPAAkAAAABAAEAAAAQAAkAAAAFAAYAAAARAAkAAAABAAEAAAASAAkAAAAEAAUAAAATAAkAAAABAAEAAAAUAAkAAAABAAEAAAAVAAkAAAABAAEAAAAWAAkAAAABAAEAAAAXAAkAAAABAAEAAAAYAAkAAAABAAEAAAAZAAkAAAABAAEAAAAaAAkAAAABAAEAAAAbAAkAAAAEAAUAAAAcAAkAAAABAAEAAAAdAAkAAAACAAUAAAAAAAoAAAAAAAUAAAABAAoAAAABAAEAAAACAAoAAAAEAAUAAAADAAoAAAABAAEAAAAEAAoAAAABAAEAAAAFAAoAAAABAAEAAAAGAAoAAAABAAEAAAAHAAoAAAABAAEAAAAIAAoAAAABAAEAAAAJAAoAAAABAAEAAAAKAAoAAAABAAEAAAALAAoAAAAEAAUAAAAMAAoAAAAFAAYAAAANAAoAAAABAAEAAAAOAAoAAAABAAEAAAAPAAoAAAABAAEAAAAQAAoAAAABAAEAAAARAAoAAAABAAEAAAASAAoAAAABAAEAAAATAAoAAAABAAEAAAAUAAoAAAAEAAUAAAAVAAoAAAABAAEAAAAWAAoAAAABAAEAAAAXAAoAAAABAAEAAAAYAAoAAAABAAEAAAAZAAoAAAAFAAYAAAAaAAoAAAABAAEAAAAbAAoAAAABAAEAAAAcAAoAAAABAAEAAAAdAAoAAAACAAUAAAAAAAsAAAAAAAUAAAABAAsAAAABAAEAAAACAAsAAAABAAEAAAADAAsAAAABAAEAAAAEAAsAAAAEAAUAAAAFAAsAAAABAAEAAAAGAAsAAAABAAEAAAAHAAsAAAABAAEAAAAIAAsAAAAFAAYAAAAJAAsAAAABAAEAAAAKAAsAAAABAAEAAAALAAsAAAABAAEAAAAMAAsAAAABAAEAAAANAAsAAAAEAAUAAAAOAAsAAAABAAEAAAAPAAsAAAABAAEAAAAQAAsAAAABAAEAAAARAAsAAAABAAEAAAASAAsAAAABAAEAAAATAAsAAAABAAEAAAAUAAsAAAABAAEAAAAVAAsAAQAQAAEAAAAWAAsAAQAQAAEAAAAXAAsAAAABAAEAAAAYAAsAAAABAAEAAAAZAAsAAAABAAEAAAAaAAsAAAABAAEAAAAbAAsAAAABAAEAAAAcAAsAAAABAAEAAAAdAAsAAAACAAUAAAAAAAwAAAAAAAUAAAABAAwAAAABAAEAAAACAAwAAAABAAEAAAADAAwAAAABAAEAAAAEAAwAAAAFAAYAAAAFAAwAAAABAAEAAAAGAAwAAAAEAAUAAAAHAAwAAAABAAEAAAAIAAwAAAABAAEAAAAJAAwAAAABAAEAAAAKAAwAAAABAAEAAAALAAwAAAABAAEAAAAMAAwAAAABAAEAAAANAAwAAAABAAEAAAAOAAwAAAABAAEAAAAPAAwAAAAEAAUAAAAQAAwAAAABAAEAAAARAAwAAAAFAAYAAAASAAwAAAABAAEAAAATAAwAAAABAAEAAAAUAAwAAAABAAEAAAAVAAwAAQAQAAEAAAAWAAwAAQAQAAEAAAAXAAwAAAABAAEAAAAYAAwAAAAEAAUAAAAZAAwAAAABAAEAAAAaAAwAAAABAAEAAAAbAAwAAAABAAEAAAAcAAwAAAABAAEAAAAdAAwAAAACAAUAAAAAAA0AAAAAAAUAAAABAA0AAAABAAEAAAACAA0AAAABAAEAAAADAA0AAQAQAAEAAAAEAA0AAQAQAAEAAAAFAA0AAAABAAEAAAAGAA0AAAABAAEAAAAHAA0AAAABAAEAAAAIAA0AAAAEAAUAAAAJAA0AAAABAAEAAAAKAA0AAAABAAEAAAALAA0AAAABAAEAAAAMAA0AAQAQAAEAAAANAA0AAQAQAAEAAAAOAA0AAQAQAAEAAAAPAA0AAQAQAAEAAAAQAA0AAQAQAAEAAAARAA0AAQAQAAEAAAASAA0AAAABAAEAAAATAA0AAAABAAEAAAAUAA0AAAABAAEAAAAVAA0AAQAQAAEAAAAWAA0AAQAQAAEAAAAXAA0AAAABAAEAAAAYAA0AAAABAAEAAAAZAA0AAAABAAEAAAAaAA0AAAAEAAUAAAAbAA0AAAABAAEAAAAcAA0AAAABAAEAAAAdAA0AAAACAAUAAAAAAA4AAAAAAAUAAAABAA4AAAAEAAUAAAACAA4AAAABAAEAAAADAA4AAAABAAEAAAAEAA4AAAABAAEAAAAFAA4AAAABAAEAAAAGAA4AAAABAAEAAAAHAA4AAAABAAEAAAAIAA4AAAABAAEAAAAJAA4AAAAFAAYAAAAKAA4AAAAEAAUAAAALAA4AAAABAAEAAAAMAA4AAQAQAAEAAAANAA4AAQAQAAEAAAAOAA4AAQAQAAEAAAAPAA4AAQAQAAEAAAAQAA4AAQAQAAEAAAARAA4AAQAQAAEAAAASAA4AAAABAAEAAAATAA4AAAAEAAUAAAAUAA4AAAABAAEAAAAVAA4AAQAQAAEAAAAWAA4AAQAQAAEAAAAXAA4AAAABAAEAAAAYAA4AAAABAAEAAAAZAA4AAAABAAEAAAAaAA4AAAABAAEAAAAbAA4AAAABAAEAAAAcAA4AAAAEAAUAAAAdAA4AAAACAAUAAAAAAA8AAAAAAAYAAAABAA8AAAABAAYAAAACAA8AAAABAAYAAAADAA8AAAABAAYAAAAEAA8AAAABAAYAAAAFAA8AAAABAAYAAAAGAA8AAAABAAYAAAAHAA8AAAABAAYAAAAIAA8AAAABAAYAAAAJAA8AAAABAAYAAAAKAA8AAAABAAYAAAALAA8AAAABAAYAAAAMAA8AAAABAAYAAAANAA8AAAABAAYAAAAOAA8AAAABAAYAAAAPAA8AAAABAAYAAAAQAA8AAAABAAYAAAARAA8AAAABAAYAAAASAA8AAAABAAYAAAATAA8AAAABAAYAAAAUAA8AAAABAAYAAAAVAA8AAAABAAYAAAAWAA8AAAABAAYAAAAXAA8AAAABAAYAAAAYAA8AAAABAAYAAAAZAA8AAAABAAYAAAAaAA8AAAABAAYAAAAbAA8AAAABAAYAAAAcAA8AAAABAAYAAAAdAA8AAAACAAYAAAA=")
+tile_set = SubResource("TileSet_room02")
+
+[node name="FloorDecor" type="Node2D" parent="."]
+z_index = -2
+
+[node name="Path_1" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(112, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_2" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(192, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_3" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(272, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_4" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(352, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_5" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(480, 256)
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_6" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(608, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_7" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(704, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_8" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(800, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_9" type="Sprite2D" parent="FloorDecor"]
+modulate = Color(0.78, 0.66, 0.62, 0.72)
+position = Vector2(872, 256)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Torch_N1" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(272, 46)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(309, 33, 15, 25)
+
+[node name="Torch_N2" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(624, 46)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(309, 33, 15, 25)
+
+[node name="Skull_1" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(336, 108)
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(199, 10, 19, 18)
+
+[node name="Ribs_1" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(364, 434)
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(227, 11, 27, 18)
+
+[node name="RamSkull_1" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(640, 424)
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(163, 10, 27, 19)
+
+[node name="DoorFloor_Left" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(22, 260)
+scale = Vector2(0.625, 1.25)
+texture = ExtResource("2_gtiles")
+region_enabled = true
+region_rect = Rect2(32, 32, 32, 32)
+
+[node name="DoorFloor_Right" type="Sprite2D" parent="FloorDecor"]
+position = Vector2(938, 260)
+scale = Vector2(0.625, 1.25)
+texture = ExtResource("2_gtiles")
+region_enabled = true
+region_rect = Rect2(32, 32, 32, 32)
+
+[node name="Structures" type="Node2D" parent="."]
+
+[node name="Exit_Room01" parent="Structures" instance=ExtResource("6_sdoor")]
+position = Vector2(12, 270)
+scale = Vector2(-1, 1)
+exit_key = "1"
+
+[node name="Exit_Room03" parent="Structures" instance=ExtResource("6_sdoor")]
+position = Vector2(948, 270)
+exit_key = "2"
+
+[node name="Spawns" type="Node2D" parent="."]
+
+[node name="a" type="Marker2D" parent="Spawns"]
+position = Vector2(80, 256)
+
+[node name="b" type="Marker2D" parent="Spawns"]
+position = Vector2(880, 256)
+
+[node name="EnemySpawns" type="Node2D" parent="."]
+
+[node name="Slime1" type="Marker2D" parent="EnemySpawns"]
+position = Vector2(432, 176)
+
+[node name="Slime2" type="Marker2D" parent="EnemySpawns"]
+position = Vector2(464, 272)
+
+[node name="Slime3" type="Marker2D" parent="EnemySpawns"]
+position = Vector2(544, 336)
+
+[node name="Tiki1" type="Marker2D" parent="EnemySpawns"]
+position = Vector2(816, 128)
+
+[node name="Tiki2" type="Marker2D" parent="EnemySpawns"]
+position = Vector2(816, 384)
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Obstacles" type="Node2D" parent="Entities"]
+y_sort_enabled = true
+
+[node name="Pillar_TL" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(240, 144)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_TL"]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 14, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_TL"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_BL" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(240, 368)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_BL"]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 126, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_BL"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_TR" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(592, 144)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_TR"]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 126, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_TR"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_BR" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(592, 368)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_BR"]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 14, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_BR"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Rock_Mid1" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(368, 208)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Rock_Mid1"]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(229, 115, 39, 44)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Rock_Mid1"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Rock_Mid2" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(496, 336)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Rock_Mid2"]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(295, 116, 39, 44)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Rock_Mid2"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_LTop" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(48, 192)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_LTop"]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(260, 42, 32, 46)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_LTop"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_LBot" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(48, 320)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_LBot"]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(260, 42, 32, 46)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_LBot"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_RTop" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(912, 192)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_RTop"]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(260, 42, 32, 46)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_RTop"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_RBot" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(912, 320)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_RBot"]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(260, 42, 32, 46)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_RBot"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="VolcRock_TR" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(880, 96)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/VolcRock_TR"]
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(144, 46, 32, 33)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/VolcRock_TR"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="VolcRock_BR" type="StaticBody2D" parent="Entities/Obstacles"]
+position = Vector2(880, 432)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/VolcRock_BR"]
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(144, 46, 32, 33)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/VolcRock_BR"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Lighting" type="Node2D" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="Lighting"]
+color = Color(0.75, 0.63, 0.62, 1)
+
+[node name="Light_LavaTop" type="PointLight2D" parent="Lighting"]
+position = Vector2(480, 96)
+color = Color(1, 0.42, 0.14, 1)
+energy = 1.25
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.4
+
+[node name="Light_LavaBot" type="PointLight2D" parent="Lighting"]
+position = Vector2(480, 448)
+color = Color(1, 0.42, 0.14, 1)
+energy = 1.25
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.4
+
+[node name="Light_RiverTop" type="PointLight2D" parent="Lighting"]
+position = Vector2(704, 128)
+color = Color(1, 0.38, 0.14, 1)
+energy = 1.15
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.0
+
+[node name="Light_RiverBot" type="PointLight2D" parent="Lighting"]
+position = Vector2(704, 416)
+color = Color(1, 0.38, 0.14, 1)
+energy = 1.15
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.0
+
+[node name="Light_BrazierLT" type="PointLight2D" parent="Lighting"]
+position = Vector2(48, 184)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.0
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.35
+
+[node name="Light_BrazierLB" type="PointLight2D" parent="Lighting"]
+position = Vector2(48, 312)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.0
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.35
+
+[node name="Light_BrazierRT" type="PointLight2D" parent="Lighting"]
+position = Vector2(912, 184)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.0
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.35
+
+[node name="Light_BrazierRB" type="PointLight2D" parent="Lighting"]
+position = Vector2(912, 312)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.0
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.35
+
+[node name="Light_TorchN1" type="PointLight2D" parent="Lighting"]
+position = Vector2(272, 46)
+color = Color(1, 0.64, 0.28, 1)
+energy = 0.9
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.2
+
+[node name="Light_TorchN2" type="PointLight2D" parent="Lighting"]
+position = Vector2(624, 46)
+color = Color(1, 0.64, 0.28, 1)
+energy = 0.9
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.2
