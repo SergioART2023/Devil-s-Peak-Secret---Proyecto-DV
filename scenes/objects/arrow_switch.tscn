@@ -12,7 +12,7 @@ collision_mask = 0
 script = ExtResource("1_switch")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
+scale = Vector2(0.55, 0.55)
 texture = ExtResource("2_tex")
 hframes = 2
 
