@@ -410,18 +410,6 @@ def make_items():
     px(b, 7, 7, "#7a5230")
     save(b, "items", "bow.png")
 
-    e = new()
-    pts = [(7, 2), (8, 2), (6, 3), (9, 3), (5, 4), (10, 4), (4, 5), (11, 5)]
-    rect(e, 5, 4, 10, 11, "#1fae5a")
-    rect(e, 4, 5, 11, 9, "#1fae5a")
-    rect(e, 6, 3, 9, 3, "#2fd070")
-    rect(e, 6, 12, 9, 12, "#0f7a3a")
-    rect(e, 5, 11, 10, 11, "#0f7a3a")
-    rect(e, 6, 5, 7, 6, "#9cf0b6")
-    px(e, 6, 5, "#ffffff")
-    rect(e, 8, 8, 9, 10, "#0f8a45")
-    save(e, "items", "emerald.png")
-
 
 def main():
     print("Generando sprites provisionales en", os.path.normpath(ROOT))

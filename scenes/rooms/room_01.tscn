@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://cijtpl4i0ahd5" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/assets/assets-all.png" id="9_assets"]
 [ext_resource type="Texture2D" uid="uid://dlq23edjf65x6" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/assets/stones.png" id="10_stones"]
 [ext_resource type="Texture2D" uid="uid://co3g7ui0x2mt4" path="res://assets/environments/volcanoe_tileset_and_assets/volcanoe_assets.png" id="11_volc"]
+[ext_resource type="PackedScene" path="res://scenes/objects/fire_particles.tscn" id="fire_particles"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bbo4o"]
 texture = ExtResource("1_1ydvn")
@@ -369,11 +370,23 @@ texture = ExtResource("9_assets")
 region_enabled = true
 region_rect = Rect2(309, 33, 15, 25)
 
+[node name="FireParticles" parent="FloorDecor/Torch_WallLeft" instance=ExtResource("fire_particles")]
+position = Vector2(0, -7)
+amount = 6
+emission_rect_extents = Vector2(2, 1)
+scale_amount_max = 2.0
+
 [node name="Torch_WallRight" type="Sprite2D" parent="FloorDecor" unique_id=900361278]
 position = Vector2(736, 34)
 texture = ExtResource("9_assets")
 region_enabled = true
 region_rect = Rect2(309, 33, 15, 25)
+
+[node name="FireParticles" parent="FloorDecor/Torch_WallRight" instance=ExtResource("fire_particles")]
+position = Vector2(0, -7)
+amount = 6
+emission_rect_extents = Vector2(2, 1)
+scale_amount_max = 2.0
 
 [node name="Structures" type="Node2D" parent="." unique_id=647877773]
 
@@ -470,6 +483,9 @@ texture = ExtResource("9_assets")
 region_enabled = true
 region_rect = Rect2(70, 17, 32, 78)
 
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_CaveL/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -22)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_CaveL" unique_id=2082164549]
 shape = SubResource("RectangleShape2D_pillar")
 
@@ -482,6 +498,9 @@ position = Vector2(0, -22)
 texture = ExtResource("9_assets")
 region_enabled = true
 region_rect = Rect2(70, 17, 32, 78)
+
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_CaveR/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -22)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_CaveR" unique_id=1540282301]
 shape = SubResource("RectangleShape2D_pillar")
@@ -496,6 +515,9 @@ texture = ExtResource("9_assets")
 region_enabled = true
 region_rect = Rect2(260, 42, 32, 46)
 
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_ExitTop/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -6)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_ExitTop" unique_id=1537269564]
 shape = SubResource("RectangleShape2D_pillar")
 
@@ -508,6 +530,9 @@ position = Vector2(0, -8)
 texture = ExtResource("9_assets")
 region_enabled = true
 region_rect = Rect2(260, 42, 32, 46)
+
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_ExitBot/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_ExitBot" unique_id=1423894139]
 shape = SubResource("RectangleShape2D_pillar")

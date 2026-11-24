@@ -7,10 +7,10 @@ extends CanvasLayer
 const DEV_ROOM_NAV := false
 signal dev_room_requested(room_id: String)
 
-const VIEW_W := 960
-const VIEW_H := 544
-const BAR_H := 32
-const BAR_Y := 512
+const VIEW_W := Room.COLS * Room.TILE
+const VIEW_H := Room.ROWS * Room.TILE
+const HUD_MARGIN := 12
+const ITEM_SLOT_W := 56
 const HEARTS_TEX := preload("res://assets/sprites/ui/hearts.png")
 const SWORD_TEX := preload("res://assets/sprites/items/sword.png")
 const BOW_TEX := preload("res://assets/sprites/items/bow.png")
@@ -21,6 +21,8 @@ var fade: ColorRect
 var msg_label: Label
 var title_label: Label
 var over_panel: Control
+var help_button: Button
+var help_panel: PanelContainer
 var _msg_tween: Tween
 var _title_tween: Tween
 
@@ -32,7 +34,7 @@ class HeartsRow extends Control:
 	func _draw() -> void:
 		for i in Game.MAX_HP / 2:
 			var v := clampi(hp - i * 2, 0, 2)   # 0 vacio, 1 medio, 2 lleno
-			draw_texture_rect_region(tex, Rect2(8 + i * 34, 0, 32, 32), Rect2(v * 16, 0, 16, 16))
+			draw_texture_rect_region(tex, Rect2(i * 34, 0, 32, 32), Rect2(v * 16, 0, 16, 16))
 
 
 class ItemsRow extends Control:
@@ -41,46 +43,46 @@ class ItemsRow extends Control:
 
 	func _draw() -> void:
 		var font := ThemeDB.fallback_font
-		var x := 0.0
-		if Game.has_item("sword"):
-			draw_texture_rect(sword_tex, Rect2(x, 0, 32, 32), false)
-			draw_string(font, Vector2(x + 28, 26), "J", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1, 1, 1, 0.8))
-			x += 68.0
+		var x := size.x - ITEM_SLOT_W
 		if Game.has_item("bow"):
-			draw_texture_rect(bow_tex, Rect2(x, 0, 32, 32), false)
-			draw_string(font, Vector2(x + 28, 26), "K", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1, 1, 1, 0.8))
+			_draw_item(bow_tex, "K", x, font)
+			x -= ITEM_SLOT_W
+		if Game.has_item("sword"):
+			_draw_item(sword_tex, "J", x, font)
+
+	func _draw_item(texture: Texture2D, key: String, x: float, font: Font) -> void:
+		draw_texture_rect(texture, Rect2(x, 0, 32, 32), false)
+		var key_position := Vector2(x + 34, 26)
+		draw_string_outline(font, key_position, key, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, 4, Color.BLACK)
+		draw_string(font, key_position, key, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
 
 
 func _ready() -> void:
 	layer = 10
-	# Barra inferior
-	var bar := ColorRect.new()
-	bar.color = Color(0.05, 0.03, 0.03)
-	bar.position = Vector2(0, BAR_Y)
-	bar.size = Vector2(VIEW_W, BAR_H)
-	add_child(bar)
 
 	hearts = HeartsRow.new()
 	hearts.tex = HEARTS_TEX
-	hearts.position = Vector2(0, BAR_Y)
-	hearts.size = Vector2(240, BAR_H)
+	hearts.position = Vector2(HUD_MARGIN, HUD_MARGIN)
+	hearts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hearts)
 
 	items = ItemsRow.new()
 	items.sword_tex = SWORD_TEX
 	items.bow_tex = BOW_TEX
-	items.position = Vector2(VIEW_W - 160, BAR_Y)
-	items.size = Vector2(160, BAR_H)
+	items.position = Vector2(VIEW_W - HUD_MARGIN - 2 * ITEM_SLOT_W, HUD_MARGIN)
+	items.size = Vector2(2 * ITEM_SLOT_W, 32)
+	items.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(items)
 
 	if DEV_ROOM_NAV:
 		_build_dev_room_nav()
 
-	msg_label = _make_label(Vector2(0, BAR_Y - 48), 20)
+	msg_label = _make_label(Vector2(0, VIEW_H - 80), 20)
 	msg_label.modulate.a = 0.0
 	title_label = _make_label(Vector2(0, 200), 36)
 	title_label.modulate.a = 0.0
 
+	_build_help()
 	_build_game_over()
 
 	fade = ColorRect.new()
@@ -95,11 +97,52 @@ func _ready() -> void:
 	_on_hp_changed(Game.hp, Game.MAX_HP)
 
 
+func _build_help() -> void:
+	help_panel = PanelContainer.new()
+	help_panel.position = Vector2(VIEW_W - 388, VIEW_H - 256)
+	help_panel.size = Vector2(376, 0)
+	help_panel.hide()
+	add_child(help_panel)
+
+	var controls := Label.new()
+	controls.text = "Cómo jugar\n\nMoverse · WASD o flechas\nEspada · J o Espacio\nArco · K o X\nEmpujar o halar bloques · Mantén E\nReiniciar sala · R\nVolver al menú · Esc"
+	controls.add_theme_font_size_override("font_size", 18)
+	help_panel.add_child(controls)
+
+	help_button = Button.new()
+	help_button.text = "?"
+	help_button.tooltip_text = "Cómo jugar"
+	help_button.position = Vector2(VIEW_W - 56, VIEW_H - 56)
+	help_button.size = Vector2(44, 44)
+	help_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	help_button.add_theme_font_size_override("font_size", 25)
+	var circle := StyleBoxFlat.new()
+	circle.bg_color = Color(0.23, 0.10, 0.07)
+	circle.border_color = Color(0.91, 0.63, 0.31)
+	circle.set_border_width_all(2)
+	circle.set_corner_radius_all(22)
+	help_button.add_theme_stylebox_override("normal", circle)
+	var highlighted := circle.duplicate() as StyleBoxFlat
+	highlighted.bg_color = Color(0.40, 0.16, 0.08)
+	help_button.add_theme_stylebox_override("hover", highlighted)
+	help_button.add_theme_stylebox_override("pressed", highlighted)
+	var focus := circle.duplicate() as StyleBoxFlat
+	focus.draw_center = false
+	focus.border_color = Color.WHITE
+	help_button.add_theme_stylebox_override("focus", focus)
+	help_button.pressed.connect(func() -> void: help_panel.visible = not help_panel.visible)
+	add_child(help_button)
+
+
+func close_help() -> void:
+	help_panel.hide()
+
+
 # --- DEV: botones de navegacion rapida entre salas (borrar junto con DEV_ROOM_NAV) ---
 func _build_dev_room_nav() -> void:
 	var row := HBoxContainer.new()
-	row.position = Vector2(250, BAR_Y + 3)
-	row.size = Vector2(460, BAR_H - 6)
+	row.position = Vector2(250, VIEW_H - 29)
+	row.size = Vector2(460, 26)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 6)
 	add_child(row)
@@ -193,6 +236,9 @@ func show_room_title(text: String) -> void:
 
 func show_game_over(visible_flag: bool) -> void:
 	over_panel.visible = visible_flag
+	help_button.visible = not visible_flag
+	if visible_flag:
+		close_help()
 
 
 func set_fade(alpha: float) -> void:

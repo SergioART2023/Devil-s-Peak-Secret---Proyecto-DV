@@ -22,9 +22,9 @@ Game="*res://scripts/game.gd"
 [display]
 
 window/size/viewport_width=960
-window/size/viewport_height=544
+window/size/viewport_height=512
 window/size/window_width_override=1440
-window/size/window_height_override=816
+window/size/window_height_override=768
 window/stretch/mode="canvas_items"
 
 [editor_plugins]

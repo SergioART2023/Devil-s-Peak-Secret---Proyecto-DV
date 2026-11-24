@@ -55,6 +55,7 @@ func _load_room(id: String, spawn: String) -> void:
 	room.exit_requested.connect(_on_exit_requested)
 	room_holder.add_child(room)
 	player.reset_for_room()
+	hud.close_help()
 	hud.show_room_title(RoomData.ROOMS[id]["name"])
 
 

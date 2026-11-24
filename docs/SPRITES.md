@@ -9,7 +9,7 @@ gratuitos (itch.io / OpenGameArt, revisando la licencia) y recórtalos a esta re
 |---|---|---|
 | `player/jacob.png` | 64×64 | 4 filas (abajo, arriba, izquierda, derecha) × 4 columnas (quieto, paso, ataque espada, ataque arco) |
 | `player/slash.png` | 16×16 | Espada/tajo apuntando a la **derecha** (el juego lo rota) |
-| `enemies/fire_slime.png` | 384×64 | **Definitivo** (Autosprite). Frames de 32×32: fila 0 idle (12), fila 1 muerte (12). Se regenera con `tools/process_slime_sheets.py` desde `assets/sprites/_source/` |
+| `enemies/fire_slime.png` | 1536×256 | **Definitivo** (Autosprite). Frames de 128×128: fila 0 idle (12), fila 1 muerte (12). Se regenera con `tools/process_slime_sheets.py` desde `assets/sprites/_source/` |
 | `enemies/tiki_shooter.png` | 32×64 | 4 filas (abajo, arriba, izq., der.) × 2 columnas (quieto, soplando) |
 | `projectiles/arrow.png`, `dart.png` | 16×16 | Apuntan a la derecha |
 | `tiles/floor_a/b.png`, `wall_top.png`, `wall_face.png` | 16×16 | Piso (2 variantes), tope de pared y cara frontal |
@@ -17,7 +17,8 @@ gratuitos (itch.io / OpenGameArt, revisando la licencia) y recórtalos a esta re
 | `tiles/door.png` | 32×16 | cerrada, abierta |
 | `tiles/gate.png`, `block.png`, `pedestal.png`, `altar.png` | 16×16 | |
 | `tiles/plate.png`, `switch.png` | 32×16 | suelta/pulsada · apagado/encendido |
-| `items/sword|bow|emerald|heart.png` | 16×16 | Iconos de objeto |
+| `items/sword.png`, `items/bow.png`, `items/heart.png` | 16×16 | Iconos de objeto |
+| `items/emerald.png` | 23×23 | Esmeralda del altar |
 | `ui/hearts.png` | 48×16 | vacío, medio, lleno |
 
 Pendiente para próximas entregas: tileset volcánico definitivo, jefe, más enemigos, animación de muerte/caída, música y SFX.

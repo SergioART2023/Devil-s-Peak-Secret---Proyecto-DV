@@ -14,9 +14,9 @@ script = ExtResource("1_slime")
 max_hp = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
+scale = Vector2(0.625, 0.625)
 texture = ExtResource("2_tex")
-offset = Vector2(0, -4)
+offset = Vector2(0, -16)
 hframes = 12
 vframes = 2
 

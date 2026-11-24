@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cb8maulut6ncs" path="res://assets/sprites/tiles/altar.png" id="6_altar"]
 [ext_resource type="PackedScene" uid="uid://40w3uonmy67u" path="res://scenes/objects/door.tscn" id="7_door"]
 [ext_resource type="PackedScene" uid="uid://bfhcfeub1ymg" path="res://scenes/objects/pickup.tscn" id="8_pickup"]
+[ext_resource type="PackedScene" path="res://scenes/objects/fire_particles.tscn" id="fire_particles"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_volc"]
 texture = ExtResource("2_vtiles")
@@ -115,17 +116,35 @@ texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(309, 33, 15, 25)
 
+[node name="FireParticles" parent="FloorDecor/Torch_N1" instance=ExtResource("fire_particles")]
+position = Vector2(0, -7)
+amount = 6
+emission_rect_extents = Vector2(2, 1)
+scale_amount_max = 2.0
+
 [node name="Torch_N2" type="Sprite2D" parent="FloorDecor" unique_id=1346807311]
 position = Vector2(480, 46)
 texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(309, 33, 15, 25)
 
+[node name="FireParticles" parent="FloorDecor/Torch_N2" instance=ExtResource("fire_particles")]
+position = Vector2(0, -7)
+amount = 6
+emission_rect_extents = Vector2(2, 1)
+scale_amount_max = 2.0
+
 [node name="Torch_N3" type="Sprite2D" parent="FloorDecor" unique_id=623675772]
 position = Vector2(656, 46)
 texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(309, 33, 15, 25)
+
+[node name="FireParticles" parent="FloorDecor/Torch_N3" instance=ExtResource("fire_particles")]
+position = Vector2(0, -7)
+amount = 6
+emission_rect_extents = Vector2(2, 1)
+scale_amount_max = 2.0
 
 [node name="Skull_L" type="Sprite2D" parent="FloorDecor" unique_id=686851811]
 position = Vector2(152, 426)
@@ -261,6 +280,9 @@ texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(70, 17, 32, 78)
 
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_TL/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -22)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_TL" unique_id=151801730]
 shape = SubResource("RectangleShape2D_pillar")
 
@@ -273,6 +295,9 @@ position = Vector2(0, -22)
 texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(70, 17, 32, 78)
+
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_TR/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -22)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_TR" unique_id=1514049197]
 shape = SubResource("RectangleShape2D_pillar")
@@ -287,6 +312,9 @@ texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(70, 17, 32, 78)
 
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_BL/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -22)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_BL" unique_id=944858731]
 shape = SubResource("RectangleShape2D_pillar")
 
@@ -299,6 +327,9 @@ position = Vector2(0, -22)
 texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(70, 17, 32, 78)
+
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_BR/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -22)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_BR" unique_id=252953639]
 shape = SubResource("RectangleShape2D_pillar")
@@ -313,6 +344,9 @@ texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(260, 42, 32, 46)
 
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_SouthL/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -6)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_SouthL" unique_id=237012004]
 shape = SubResource("RectangleShape2D_pillar")
 
@@ -325,6 +359,9 @@ position = Vector2(0, -8)
 texture = ExtResource("5_cassets")
 region_enabled = true
 region_rect = Rect2(260, 42, 32, 46)
+
+[node name="FireParticles" parent="Entities/Obstacles/Brazier_SouthR/Sprite2D" instance=ExtResource("fire_particles")]
+position = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_SouthR" unique_id=820769724]
 shape = SubResource("RectangleShape2D_pillar")

@@ -1,7 +1,7 @@
 class_name FireSlime
 extends Enemy
 ## Blob de lava (sin ojos): deambula y, si ve al jugador, se acerca para atacar.
-## Hoja fire_slime.png: 12 columnas x 2 filas de 32x32. Fila 0 = idle (12 frames), fila 1 = muerte (12).
+## Hoja fire_slime.png: 12 columnas x 2 filas de 128x128. Fila 0 = idle, fila 1 = muerte.
 
 const SPEED := 68.0
 const SIGHT := 240.0
