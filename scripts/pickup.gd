@@ -4,7 +4,7 @@ extends Area2D
 
 const SCALES := {
 	"sword": Vector2(0.18, 0.18),
-	"bow": Vector2(2.0, 2.0),
+	"bow": Vector2(0.18, 0.18),
 	"emerald": Vector2(2.0, 2.0),
 	"heart": Vector2(2.0, 2.0),
 }

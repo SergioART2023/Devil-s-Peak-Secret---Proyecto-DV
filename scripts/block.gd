@@ -58,7 +58,17 @@ func move_to(target: Vector2i, duration: float = 0.22) -> void:
 
 func _sink() -> void:
 	$CollisionShape2D.set_deferred("disabled", true)
-	var tw := create_tween()
-	tw.tween_property(self, "scale", Vector2.ZERO, 0.3)
-	await tw.finished
-	queue_free()
+	z_index = -1
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(sprite, "position:y", 1.0, 0.35).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(sprite, "scale", Vector2(0.92, 0.78), 0.35).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(sprite, "modulate", Color(0.95, 0.78, 0.70, 1.0), 0.35)
+
+
+func set_sunken() -> void:
+	$CollisionShape2D.set_deferred("disabled", true)
+	z_index = -1
+	if sprite != null:
+		sprite.position.y = 1.0
+		sprite.scale = Vector2(0.92, 0.78)
+		sprite.modulate = Color(0.95, 0.78, 0.70, 1.0)

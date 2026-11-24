@@ -366,22 +366,22 @@ func _update_back_gear() -> void:
 			match facing:
 				Vector2i.UP:
 					back_sword.z_index = 1
-					back_sword.position = Vector2(-7.0, 8.0 + bob)
-					back_sword.rotation_degrees = 170.0
-					back_sword.flip_h = false
-				Vector2i.DOWN:
-					back_sword.z_index = 1
 					back_sword.position = Vector2(7.0, 8.0 + bob)
 					back_sword.rotation_degrees = 100.0
 					back_sword.flip_h = false
-				Vector2i.LEFT:
+				Vector2i.DOWN:
 					back_sword.z_index = 1
-					back_sword.position = Vector2(2.0, 8.0 + bob)
+					back_sword.position = Vector2(-7.0, 8.0 + bob)
+					back_sword.rotation_degrees = 170.0
+					back_sword.flip_h = false
+				Vector2i.LEFT:
+					back_sword.z_index = -1
+					back_sword.position = Vector2(3.0, 8.0 + bob)
 					back_sword.rotation_degrees = 110.0
 					back_sword.flip_h = false
 				Vector2i.RIGHT:
-					back_sword.z_index = -1
-					back_sword.position = Vector2(-3.0, 8.0 + bob)
+					back_sword.z_index = 1
+					back_sword.position = Vector2(-2.0, 8.0 + bob)
 					back_sword.rotation_degrees = 160.0
 					back_sword.flip_h = false
 

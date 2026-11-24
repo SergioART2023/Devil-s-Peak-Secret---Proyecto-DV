@@ -132,7 +132,8 @@ func can_block_enter(c: Vector2i, ignore_player: bool = false) -> bool:
 func fill_lava(c: Vector2i, block: Block) -> void:
 	grid[c.y][c.x] = "."
 	blocks.erase(block)
-	queue_redraw()
+	if not _is_manual:
+		queue_redraw()
 
 
 # --- Construccion ---------------------------------------------------------------------------
@@ -171,6 +172,11 @@ func _setup_manual_scene() -> void:
 				if ac.x >= 14:
 					grid[cell.y][cell.x] = "~"
 					_has_lava = true
+		if solved:
+			for f in data.get("fill_on_solved", []):
+				var fc := Vector2i(f[0], f[1])
+				if fc.x >= 0 and fc.y >= 0 and fc.x < COLS and fc.y < ROWS:
+					grid[fc.y][fc.x] = "."
 
 	# Puntos de spawn (ignorar si quedaron en (0, 0) sin colocar)
 	if has_node("Spawns"):
@@ -235,8 +241,10 @@ func _setup_manual_scene() -> void:
 				if c.x >= 0 and c.y >= 0 and c.x < COLS and c.y < ROWS:
 					grid[c.y][c.x] = "#"
 
-	# Bloques y objetos en Entities (si ya estaba resuelta, aparecen encima de las placas)
+	# Bloques y objetos en Entities (si ya estaba resuelta, aparecen encima de las placas o hundidos en la lava)
+	var fill_list: Array = data.get("fill_on_solved", [])
 	var block_idx := 0
+	var fill_idx := 0
 	for child in entities.get_children():
 		if child is Block:
 			var target_cell: Vector2i = pos_to_cell(child.position)
@@ -244,6 +252,13 @@ func _setup_manual_scene() -> void:
 			if solved and block_idx < plates.size():
 				target_cell = plates[block_idx]
 				on_plate = true
+			elif solved and fill_idx < fill_list.size():
+				var fc := Vector2i(fill_list[fill_idx][0], fill_list[fill_idx][1])
+				child.setup(self, fc)
+				child.set_sunken()
+				fill_idx += 1
+				block_idx += 1
+				continue
 			child.setup(self, target_cell)
 			child.set_lit(on_plate)
 			blocks.append(child)
