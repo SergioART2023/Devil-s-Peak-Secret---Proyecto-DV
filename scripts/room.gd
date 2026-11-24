@@ -158,6 +158,20 @@ func _setup_manual_scene() -> void:
 			row.append("#" if is_border else ".")
 		grid.append(row)
 
+	# Detectar casillas de lava pintadas en el TileMapLayer (volcanoe_tiles.png cols >= 14)
+	var tml := get_node_or_null("TileMapLayer") as TileMapLayer
+	if tml != null and tml.tile_set != null:
+		for cell in tml.get_used_cells():
+			if cell.x <= 0 or cell.y <= 0 or cell.x >= COLS - 1 or cell.y >= ROWS - 1:
+				continue
+			var src_id := tml.get_cell_source_id(cell)
+			var src := tml.tile_set.get_source(src_id) as TileSetAtlasSource
+			if src != null and src.texture != null and src.texture.resource_path.ends_with("volcanoe_tiles.png"):
+				var ac := tml.get_cell_atlas_coords(cell)
+				if ac.x >= 14:
+					grid[cell.y][cell.x] = "~"
+					_has_lava = true
+
 	# Puntos de spawn (ignorar si quedaron en (0, 0) sin colocar)
 	if has_node("Spawns"):
 		for marker in $Spawns.get_children():

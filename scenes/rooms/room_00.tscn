@@ -1,0 +1,439 @@
+[gd_scene format=4 uid="uid://bm2dkfwta743x"]
+
+[ext_resource type="Script" uid="uid://b0wy825aadjhx" path="res://scripts/room.gd" id="1_room"]
+[ext_resource type="Texture2D" uid="uid://bbbv7d7t4kbcq" path="res://assets/environments/volcanoe_tileset_and_assets/volcanoe_tiles.png" id="2_vtiles"]
+[ext_resource type="Texture2D" uid="uid://co3g7ui0x2mt4" path="res://assets/environments/volcanoe_tileset_and_assets/volcanoe_assets.png" id="3_vassets"]
+[ext_resource type="Texture2D" uid="uid://dlq23edjf65x6" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/assets/stones.png" id="4_stones"]
+[ext_resource type="Texture2D" uid="uid://cijtpl4i0ahd5" path="res://assets/environments/basic caves and dungeons 32x32 standard - v1.0/assets/assets-all.png" id="5_cassets"]
+[ext_resource type="Texture2D" uid="uid://cb8maulut6ncs" path="res://assets/sprites/tiles/altar.png" id="6_altar"]
+[ext_resource type="PackedScene" uid="uid://40w3uonmy67u" path="res://scenes/objects/door.tscn" id="7_door"]
+[ext_resource type="PackedScene" uid="uid://bfhcfeub1ymg" path="res://scenes/objects/pickup.tscn" id="8_pickup"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_volc"]
+texture = ExtResource("2_vtiles")
+texture_region_size = Vector2i(32, 32)
+4:1/0 = 0
+5:1/0 = 0
+4:4/0 = 0
+4:5/0 = 0
+4:6/0 = 0
+6:6/0 = 0
+6:7/0 = 0
+14:4/0 = 0
+15:4/0 = 0
+16:4/0 = 0
+14:5/0 = 0
+15:5/0 = 0
+16:5/0 = 0
+14:6/0 = 0
+15:6/0 = 0
+16:6/0 = 0
+16:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_temple"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_volc")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pillar"]
+size = Vector2(30, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_north_wall"]
+size = Vector2(960, 32)
+
+[sub_resource type="Gradient" id="Gradient_light"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+width = 160
+height = 160
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Room00" type="Node2D" unique_id=2094020784]
+script = ExtResource("1_room")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=145028039]
+z_index = -2
+tile_map_data = PackedByteArray("AAAAAAAAAAAEAAQAAAABAAAAAAAEAAQAAAACAAAAAAAEAAQAAAADAAAAAAAEAAQAAAAEAAAAAAAEAAQAAAAFAAAAAAAEAAQAAAAGAAAAAAAEAAQAAAAHAAAAAAAEAAQAAAAIAAAAAAAEAAQAAAAJAAAAAAAEAAQAAAAKAAAAAAAEAAQAAAALAAAAAAAEAAQAAAAMAAAAAAAEAAQAAAANAAAAAAAEAAQAAAAOAAAAAAAEAAQAAAAPAAAAAAAEAAQAAAAQAAAAAAAEAAQAAAARAAAAAAAEAAQAAAASAAAAAAAEAAQAAAATAAAAAAAEAAQAAAAUAAAAAAAEAAQAAAAVAAAAAAAEAAQAAAAWAAAAAAAEAAQAAAAXAAAAAAAEAAQAAAAYAAAAAAAEAAQAAAAZAAAAAAAEAAQAAAAaAAAAAAAEAAQAAAAbAAAAAAAEAAQAAAAcAAAAAAAEAAQAAAAdAAAAAAAEAAQAAAAAAAEAAAAEAAYAAAABAAEAAAAEAAYAAAACAAEAAAAEAAYAAAADAAEAAAAEAAYAAAAEAAEAAAAEAAYAAAAFAAEAAAAEAAYAAAAGAAEAAAAEAAYAAAAHAAEAAAAEAAYAAAAIAAEAAAAEAAYAAAAJAAEAAAAEAAYAAAAKAAEAAAAEAAYAAAALAAEAAAAEAAYAAAAMAAEAAAAEAAYAAAANAAEAAAAEAAYAAAAOAAEAAAAEAAYAAAAPAAEAAAAEAAYAAAAQAAEAAAAEAAYAAAARAAEAAAAEAAYAAAASAAEAAAAEAAYAAAATAAEAAAAEAAYAAAAUAAEAAAAEAAYAAAAVAAEAAAAEAAYAAAAWAAEAAAAEAAYAAAAXAAEAAAAEAAYAAAAYAAEAAAAEAAYAAAAZAAEAAAAEAAYAAAAaAAEAAAAEAAYAAAAbAAEAAAAEAAYAAAAcAAEAAAAEAAYAAAAdAAEAAAAEAAYAAAAAAAIAAAAEAAUAAAABAAIAAAAEAAEAAAACAAIAAAAEAAEAAAADAAIAAAAEAAEAAAAEAAIAAAAEAAEAAAAFAAIAAAAEAAEAAAAGAAIAAAAEAAEAAAAHAAIAAAAEAAEAAAAIAAIAAAAEAAEAAAAJAAIAAAAEAAEAAAAKAAIAAAAEAAEAAAALAAIAAAAEAAEAAAAMAAIAAAAEAAEAAAANAAIAAAAEAAEAAAAOAAIAAAAEAAEAAAAPAAIAAAAEAAEAAAAQAAIAAAAEAAEAAAARAAIAAAAEAAEAAAASAAIAAAAEAAEAAAATAAIAAAAEAAEAAAAUAAIAAAAEAAEAAAAVAAIAAAAEAAEAAAAWAAIAAAAEAAEAAAAXAAIAAAAEAAEAAAAYAAIAAAAEAAEAAAAZAAIAAAAEAAEAAAAaAAIAAAAEAAEAAAAbAAIAAAAEAAEAAAAcAAIAAAAEAAEAAAAdAAIAAAAEAAUAAAAAAAMAAAAEAAUAAAABAAMAAAAEAAEAAAACAAMAAAAEAAEAAAADAAMAAAAEAAEAAAAEAAMAAAAEAAEAAAAFAAMAAAAEAAEAAAAGAAMAAAAEAAEAAAAHAAMAAAAEAAEAAAAIAAMAAAAEAAEAAAAJAAMAAAAEAAEAAAAKAAMAAAAEAAEAAAALAAMAAAAEAAEAAAAMAAMAAAAEAAEAAAANAAMAAAAEAAEAAAAOAAMAAAAEAAEAAAAPAAMAAAAEAAEAAAAQAAMAAAAEAAEAAAARAAMAAAAEAAEAAAASAAMAAAAEAAEAAAATAAMAAAAEAAEAAAAUAAMAAAAEAAEAAAAVAAMAAAAEAAEAAAAWAAMAAAAEAAEAAAAXAAMAAAAEAAEAAAAYAAMAAAAEAAEAAAAZAAMAAAAEAAEAAAAaAAMAAAAEAAEAAAAbAAMAAAAEAAEAAAAcAAMAAAAEAAEAAAAdAAMAAAAEAAUAAAAAAAQAAAAEAAUAAAABAAQAAAAQAAEAAAACAAQAAAAQAAEAAAADAAQAAAAEAAEAAAAEAAQAAAAEAAEAAAAFAAQAAAAEAAEAAAAGAAQAAAAEAAEAAAAHAAQAAAAEAAEAAAAIAAQAAAAEAAEAAAAJAAQAAAAEAAEAAAAKAAQAAAAEAAEAAAALAAQAAAAEAAEAAAAMAAQAAAAEAAEAAAANAAQAAAAEAAEAAAAOAAQAAAAEAAEAAAAPAAQAAAAEAAEAAAAQAAQAAAAEAAEAAAARAAQAAAAEAAEAAAASAAQAAAAEAAEAAAATAAQAAAAEAAEAAAAUAAQAAAAEAAEAAAAVAAQAAAAEAAEAAAAWAAQAAAAEAAEAAAAXAAQAAAAEAAEAAAAYAAQAAAAEAAEAAAAZAAQAAAAEAAEAAAAaAAQAAAAEAAEAAAAbAAQAAAAQAAEAAAAcAAQAAAAQAAEAAAAdAAQAAAAEAAUAAAAAAAUAAAAEAAUAAAABAAUAAAAQAAEAAAACAAUAAAAQAAEAAAADAAUAAAAEAAEAAAAEAAUAAAAEAAEAAAAFAAUAAAAEAAEAAAAGAAUAAAAEAAEAAAAHAAUAAAAEAAEAAAAIAAUAAAAEAAEAAAAJAAUAAAAEAAEAAAAKAAUAAAAEAAEAAAALAAUAAAAEAAEAAAAMAAUAAAAEAAEAAAANAAUAAAAEAAEAAAAOAAUAAAAEAAEAAAAPAAUAAAAEAAEAAAAQAAUAAAAEAAEAAAARAAUAAAAEAAEAAAASAAUAAAAEAAEAAAATAAUAAAAEAAEAAAAUAAUAAAAEAAEAAAAVAAUAAAAEAAEAAAAWAAUAAAAEAAEAAAAXAAUAAAAEAAEAAAAYAAUAAAAEAAEAAAAZAAUAAAAEAAEAAAAaAAUAAAAEAAEAAAAbAAUAAAAQAAEAAAAcAAUAAAAQAAEAAAAdAAUAAAAEAAUAAAAAAAYAAAAEAAUAAAABAAYAAAAQAAEAAAACAAYAAAAQAAEAAAADAAYAAAAEAAEAAAAEAAYAAAAEAAEAAAAFAAYAAAAEAAEAAAAGAAYAAAAEAAEAAAAHAAYAAAAEAAEAAAAIAAYAAAAEAAEAAAAJAAYAAAAEAAEAAAAKAAYAAAAEAAEAAAALAAYAAAAEAAEAAAAMAAYAAAAEAAEAAAANAAYAAAAEAAEAAAAOAAYAAAAEAAEAAAAPAAYAAAAEAAEAAAAQAAYAAAAEAAEAAAARAAYAAAAEAAEAAAASAAYAAAAEAAEAAAATAAYAAAAEAAEAAAAUAAYAAAAEAAEAAAAVAAYAAAAEAAEAAAAWAAYAAAAEAAEAAAAXAAYAAAAEAAEAAAAYAAYAAAAEAAEAAAAZAAYAAAAEAAEAAAAaAAYAAAAEAAEAAAAbAAYAAAAQAAEAAAAcAAYAAAAQAAEAAAAdAAYAAAAEAAUAAAAAAAcAAAAEAAUAAAABAAcAAAAQAAEAAAACAAcAAAAQAAEAAAADAAcAAAAEAAEAAAAEAAcAAAAEAAEAAAAFAAcAAAAEAAEAAAAGAAcAAAAEAAEAAAAHAAcAAAAEAAEAAAAIAAcAAAAEAAEAAAAJAAcAAAAEAAEAAAAKAAcAAAAEAAEAAAALAAcAAAAEAAEAAAAMAAcAAAAEAAEAAAANAAcAAAAEAAEAAAAOAAcAAAAEAAEAAAAPAAcAAAAEAAEAAAAQAAcAAAAEAAEAAAARAAcAAAAEAAEAAAASAAcAAAAEAAEAAAATAAcAAAAEAAEAAAAUAAcAAAAEAAEAAAAVAAcAAAAEAAEAAAAWAAcAAAAEAAEAAAAXAAcAAAAEAAEAAAAYAAcAAAAEAAEAAAAZAAcAAAAEAAEAAAAaAAcAAAAEAAEAAAAbAAcAAAAQAAEAAAAcAAcAAAAQAAEAAAAdAAcAAAAEAAUAAAAAAAgAAAAEAAUAAAABAAgAAAAQAAEAAAACAAgAAAAQAAEAAAADAAgAAAAEAAEAAAAEAAgAAAAEAAEAAAAFAAgAAAAEAAEAAAAGAAgAAAAEAAEAAAAHAAgAAAAEAAEAAAAIAAgAAAAEAAEAAAAJAAgAAAAEAAEAAAAKAAgAAAAEAAEAAAALAAgAAAAEAAEAAAAMAAgAAAAEAAEAAAANAAgAAAAEAAEAAAAOAAgAAAAEAAEAAAAPAAgAAAAEAAEAAAAQAAgAAAAEAAEAAAARAAgAAAAEAAEAAAASAAgAAAAEAAEAAAATAAgAAAAEAAEAAAAUAAgAAAAEAAEAAAAVAAgAAAAEAAEAAAAWAAgAAAAEAAEAAAAXAAgAAAAEAAEAAAAYAAgAAAAEAAEAAAAZAAgAAAAEAAEAAAAaAAgAAAAEAAEAAAAbAAgAAAAQAAEAAAAcAAgAAAAQAAEAAAAdAAgAAAAEAAUAAAAAAAkAAAAEAAUAAAABAAkAAAAQAAEAAAACAAkAAAAQAAEAAAADAAkAAAAEAAEAAAAEAAkAAAAEAAEAAAAFAAkAAAAEAAEAAAAGAAkAAAAEAAEAAAAHAAkAAAAEAAEAAAAIAAkAAAAEAAEAAAAJAAkAAAAEAAEAAAAKAAkAAAAEAAEAAAALAAkAAAAEAAEAAAAMAAkAAAAEAAEAAAANAAkAAAAEAAEAAAAOAAkAAAAEAAEAAAAPAAkAAAAEAAEAAAAQAAkAAAAEAAEAAAARAAkAAAAEAAEAAAASAAkAAAAEAAEAAAATAAkAAAAEAAEAAAAUAAkAAAAEAAEAAAAVAAkAAAAEAAEAAAAWAAkAAAAEAAEAAAAXAAkAAAAEAAEAAAAYAAkAAAAEAAEAAAAZAAkAAAAEAAEAAAAaAAkAAAAEAAEAAAAbAAkAAAAQAAEAAAAcAAkAAAAQAAEAAAAdAAkAAAAEAAUAAAAAAAoAAAAEAAUAAAABAAoAAAAQAAEAAAACAAoAAAAQAAEAAAADAAoAAAAEAAEAAAAEAAoAAAAEAAEAAAAFAAoAAAAEAAEAAAAGAAoAAAAEAAEAAAAHAAoAAAAEAAEAAAAIAAoAAAAEAAEAAAAJAAoAAAAEAAEAAAAKAAoAAAAEAAEAAAALAAoAAAAEAAEAAAAMAAoAAAAEAAEAAAANAAoAAAAEAAEAAAAOAAoAAAAEAAEAAAAPAAoAAAAEAAEAAAAQAAoAAAAEAAEAAAARAAoAAAAEAAEAAAASAAoAAAAEAAEAAAATAAoAAAAEAAEAAAAUAAoAAAAEAAEAAAAVAAoAAAAEAAEAAAAWAAoAAAAEAAEAAAAXAAoAAAAEAAEAAAAYAAoAAAAEAAEAAAAZAAoAAAAEAAEAAAAaAAoAAAAEAAEAAAAbAAoAAAAQAAEAAAAcAAoAAAAQAAEAAAAdAAoAAAAEAAUAAAAAAAsAAAAEAAUAAAABAAsAAAAQAAEAAAACAAsAAAAQAAEAAAADAAsAAAAEAAEAAAAEAAsAAAAEAAEAAAAFAAsAAAAEAAEAAAAGAAsAAAAEAAEAAAAHAAsAAAAEAAEAAAAIAAsAAAAEAAEAAAAJAAsAAAAEAAEAAAAKAAsAAAAEAAEAAAALAAsAAAAEAAEAAAAMAAsAAAAEAAEAAAANAAsAAAAEAAEAAAAOAAsAAAAEAAEAAAAPAAsAAAAEAAEAAAAQAAsAAAAEAAEAAAARAAsAAAAEAAEAAAASAAsAAAAEAAEAAAATAAsAAAAEAAEAAAAUAAsAAAAEAAEAAAAVAAsAAAAEAAEAAAAWAAsAAAAEAAEAAAAXAAsAAAAEAAEAAAAYAAsAAAAEAAEAAAAZAAsAAAAEAAEAAAAaAAsAAAAEAAEAAAAbAAsAAAAQAAEAAAAcAAsAAAAQAAEAAAAdAAsAAAAEAAUAAAAAAAwAAAAEAAUAAAABAAwAAAAEAAEAAAACAAwAAAAEAAEAAAADAAwAAAAEAAEAAAAEAAwAAAAEAAEAAAAFAAwAAAAEAAEAAAAGAAwAAAAEAAEAAAAHAAwAAAAEAAEAAAAIAAwAAAAEAAEAAAAJAAwAAAAEAAEAAAAKAAwAAAAEAAEAAAALAAwAAAAEAAEAAAAMAAwAAAAEAAEAAAANAAwAAAAEAAEAAAAOAAwAAAAEAAEAAAAPAAwAAAAEAAEAAAAQAAwAAAAEAAEAAAARAAwAAAAEAAEAAAASAAwAAAAEAAEAAAATAAwAAAAEAAEAAAAUAAwAAAAEAAEAAAAVAAwAAAAEAAEAAAAWAAwAAAAEAAEAAAAXAAwAAAAEAAEAAAAYAAwAAAAEAAEAAAAZAAwAAAAEAAEAAAAaAAwAAAAEAAEAAAAbAAwAAAAEAAEAAAAcAAwAAAAEAAEAAAAdAAwAAAAEAAUAAAAAAA0AAAAEAAUAAAABAA0AAAAEAAEAAAACAA0AAAAEAAEAAAADAA0AAAAEAAEAAAAEAA0AAAAEAAEAAAAFAA0AAAAEAAEAAAAGAA0AAAAEAAEAAAAHAA0AAAAEAAEAAAAIAA0AAAAEAAEAAAAJAA0AAAAEAAEAAAAKAA0AAAAEAAEAAAALAA0AAAAEAAEAAAAMAA0AAAAEAAEAAAANAA0AAAAEAAEAAAAOAA0AAAAEAAEAAAAPAA0AAAAEAAEAAAAQAA0AAAAEAAEAAAARAA0AAAAEAAEAAAASAA0AAAAEAAEAAAATAA0AAAAEAAEAAAAUAA0AAAAEAAEAAAAVAA0AAAAEAAEAAAAWAA0AAAAEAAEAAAAXAA0AAAAEAAEAAAAYAA0AAAAEAAEAAAAZAA0AAAAEAAEAAAAaAA0AAAAEAAEAAAAbAA0AAAAEAAEAAAAcAA0AAAAEAAEAAAAdAA0AAAAEAAUAAAAAAA4AAAAEAAUAAAABAA4AAAAEAAEAAAACAA4AAAAEAAEAAAADAA4AAAAEAAEAAAAEAA4AAAAEAAEAAAAFAA4AAAAEAAEAAAAGAA4AAAAEAAEAAAAHAA4AAAAEAAEAAAAIAA4AAAAEAAEAAAAJAA4AAAAEAAEAAAAKAA4AAAAEAAEAAAALAA4AAAAEAAEAAAAMAA4AAAAEAAEAAAANAA4AAAAEAAEAAAAOAA4AAAAGAAYAAAAPAA4AAAAGAAYAAAAQAA4AAAAEAAEAAAARAA4AAAAEAAEAAAASAA4AAAAEAAEAAAATAA4AAAAEAAEAAAAUAA4AAAAEAAEAAAAVAA4AAAAEAAEAAAAWAA4AAAAEAAEAAAAXAA4AAAAEAAEAAAAYAA4AAAAEAAEAAAAZAA4AAAAEAAEAAAAaAA4AAAAEAAEAAAAbAA4AAAAEAAEAAAAcAA4AAAAEAAEAAAAdAA4AAAAEAAUAAAAAAA8AAAAEAAUAAAABAA8AAAAEAAUAAAACAA8AAAAEAAUAAAADAA8AAAAEAAUAAAAEAA8AAAAEAAUAAAAFAA8AAAAEAAUAAAAGAA8AAAAEAAUAAAAHAA8AAAAEAAUAAAAIAA8AAAAEAAUAAAAJAA8AAAAEAAUAAAAKAA8AAAAEAAUAAAALAA8AAAAEAAUAAAAMAA8AAAAEAAUAAAANAA8AAAAEAAUAAAAOAA8AAAAGAAcAAAAPAA8AAAAGAAcAAAAQAA8AAAAEAAUAAAARAA8AAAAEAAUAAAASAA8AAAAEAAUAAAATAA8AAAAEAAUAAAAUAA8AAAAEAAUAAAAVAA8AAAAEAAUAAAAWAA8AAAAEAAUAAAAXAA8AAAAEAAUAAAAYAA8AAAAEAAUAAAAZAA8AAAAEAAUAAAAaAA8AAAAEAAUAAAAbAA8AAAAEAAUAAAAcAA8AAAAEAAUAAAAdAA8AAAAEAAUAAAA=")
+tile_set = SubResource("TileSet_temple")
+
+[node name="FloorDecor" type="Node2D" parent="." unique_id=1480171477]
+z_index = -2
+
+[node name="Path_S1" type="Sprite2D" parent="FloorDecor" unique_id=913631475]
+modulate = Color(0.66, 0.68, 0.72, 0.8)
+position = Vector2(480, 416)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_S2" type="Sprite2D" parent="FloorDecor" unique_id=270959043]
+modulate = Color(0.66, 0.68, 0.72, 0.8)
+position = Vector2(480, 352)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Path_S3" type="Sprite2D" parent="FloorDecor" unique_id=2029568839]
+modulate = Color(0.66, 0.68, 0.72, 0.8)
+position = Vector2(480, 288)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="AltarBase_C" type="Sprite2D" parent="FloorDecor" unique_id=352869038]
+modulate = Color(0.75, 0.78, 0.82, 0.85)
+position = Vector2(480, 208)
+scale = Vector2(1.8, 1.8)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(481, 257, 62, 62)
+
+[node name="Torch_N1" type="Sprite2D" parent="FloorDecor" unique_id=1577171601]
+position = Vector2(304, 46)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(309, 33, 15, 25)
+
+[node name="Torch_N2" type="Sprite2D" parent="FloorDecor" unique_id=1346807311]
+position = Vector2(480, 46)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(309, 33, 15, 25)
+
+[node name="Torch_N3" type="Sprite2D" parent="FloorDecor" unique_id=623675772]
+position = Vector2(656, 46)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(309, 33, 15, 25)
+
+[node name="Skull_L" type="Sprite2D" parent="FloorDecor" unique_id=686851811]
+position = Vector2(152, 426)
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(199, 10, 19, 18)
+
+[node name="Ribs_L" type="Sprite2D" parent="FloorDecor" unique_id=878548619]
+position = Vector2(182, 434)
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(227, 11, 27, 18)
+
+[node name="RamSkull_R" type="Sprite2D" parent="FloorDecor" unique_id=1655269460]
+position = Vector2(804, 424)
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(163, 10, 27, 19)
+
+[node name="GemAltar" type="Sprite2D" parent="." unique_id=870548723]
+z_index = -1
+position = Vector2(480, 208)
+texture = ExtResource("6_altar")
+
+[node name="Structures" type="Node2D" parent="." unique_id=1469142314]
+
+[node name="Exit_HiddenEnding" parent="Structures" unique_id=1013362827 instance=ExtResource("7_door")]
+visible = false
+position = Vector2(480, 496)
+scale = Vector2(2, 1)
+exit_key = "1"
+
+[node name="Spawns" type="Node2D" parent="." unique_id=548641552]
+
+[node name="a" type="Marker2D" parent="Spawns" unique_id=1805639207]
+position = Vector2(480, 400)
+
+[node name="Entities" type="Node2D" parent="." unique_id=1173529309]
+y_sort_enabled = true
+
+[node name="Emerald" parent="Entities" unique_id=767463520 instance=ExtResource("8_pickup")]
+position = Vector2(479, 189)
+item_id = "emerald"
+
+[node name="Obstacles" type="Node2D" parent="Entities" unique_id=1457545551]
+y_sort_enabled = true
+
+[node name="Pillar_L1" type="StaticBody2D" parent="Entities/Obstacles" unique_id=2121432114]
+position = Vector2(272, 144)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_L1" unique_id=759813610]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 14, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_L1" unique_id=1202270326]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_L2" type="StaticBody2D" parent="Entities/Obstacles" unique_id=222018141]
+position = Vector2(272, 272)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_L2" unique_id=1405546365]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 126, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_L2" unique_id=1920010476]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_L3" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1957359735]
+position = Vector2(272, 400)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_L3" unique_id=1591389788]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 14, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_L3" unique_id=1421768684]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_R1" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1103003308]
+position = Vector2(688, 144)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_R1" unique_id=1190516938]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 14, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_R1" unique_id=2021762502]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_R2" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1758608075]
+position = Vector2(688, 272)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_R2" unique_id=1055124726]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 126, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_R2" unique_id=1652858156]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Pillar_R3" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1437648897]
+position = Vector2(688, 400)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Pillar_R3" unique_id=1743617141]
+position = Vector2(0, -28)
+texture = ExtResource("4_stones")
+region_enabled = true
+region_rect = Rect2(432, 14, 32, 91)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Pillar_R3" unique_id=1756720172]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_TL" type="StaticBody2D" parent="Entities/Obstacles" unique_id=50025595]
+position = Vector2(384, 160)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_TL" unique_id=40041329]
+position = Vector2(0, -22)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(70, 17, 32, 78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_TL" unique_id=151801730]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_TR" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1234336566]
+position = Vector2(576, 160)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_TR" unique_id=2118018051]
+position = Vector2(0, -22)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(70, 17, 32, 78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_TR" unique_id=1514049197]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_BL" type="StaticBody2D" parent="Entities/Obstacles" unique_id=666228742]
+position = Vector2(384, 272)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_BL" unique_id=6524781]
+position = Vector2(0, -22)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(70, 17, 32, 78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_BL" unique_id=944858731]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_BR" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1364700606]
+position = Vector2(576, 272)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_BR" unique_id=1985044376]
+position = Vector2(0, -22)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(70, 17, 32, 78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_BR" unique_id=252953639]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_SouthL" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1851569243]
+position = Vector2(400, 456)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_SouthL" unique_id=556971647]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(260, 42, 32, 46)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_SouthL" unique_id=237012004]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="Brazier_SouthR" type="StaticBody2D" parent="Entities/Obstacles" unique_id=733164131]
+position = Vector2(560, 456)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/Brazier_SouthR" unique_id=1398787423]
+position = Vector2(0, -8)
+texture = ExtResource("5_cassets")
+region_enabled = true
+region_rect = Rect2(260, 42, 32, 46)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/Brazier_SouthR" unique_id=820769724]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="VolcRock_TL" type="StaticBody2D" parent="Entities/Obstacles" unique_id=580667307]
+position = Vector2(144, 96)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/VolcRock_TL" unique_id=1167893029]
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(144, 46, 32, 33)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/VolcRock_TL" unique_id=16507890]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="VolcRock_TR" type="StaticBody2D" parent="Entities/Obstacles" unique_id=1386906316]
+position = Vector2(816, 96)
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/Obstacles/VolcRock_TR" unique_id=1430788311]
+texture = ExtResource("3_vassets")
+region_enabled = true
+region_rect = Rect2(144, 46, 32, 33)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Obstacles/VolcRock_TR" unique_id=1976588362]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="ChannelBarriers" type="StaticBody2D" parent="." unique_id=1419596136]
+collision_mask = 0
+
+[node name="NorthWall" type="CollisionShape2D" parent="ChannelBarriers" unique_id=161137470]
+position = Vector2(480, 48)
+shape = SubResource("RectangleShape2D_north_wall")
+
+[node name="Lighting" type="Node2D" parent="." unique_id=1402824627]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="Lighting" unique_id=1409225896]
+color = Color(0.72, 0.66, 0.72, 1)
+
+[node name="Light_Emerald" type="PointLight2D" parent="Lighting" unique_id=1394682595]
+position = Vector2(480, 200)
+color = Color(0.25, 1, 0.58, 1)
+energy = 1.4
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.2
+
+[node name="Light_BrazierTL" type="PointLight2D" parent="Lighting" unique_id=2056106892]
+position = Vector2(384, 144)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.05
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.4
+
+[node name="Light_BrazierTR" type="PointLight2D" parent="Lighting" unique_id=775047776]
+position = Vector2(576, 144)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.05
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.4
+
+[node name="Light_BrazierBL" type="PointLight2D" parent="Lighting" unique_id=265467876]
+position = Vector2(384, 256)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.05
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.4
+
+[node name="Light_BrazierBR" type="PointLight2D" parent="Lighting" unique_id=875154451]
+position = Vector2(576, 256)
+color = Color(1, 0.6, 0.25, 1)
+energy = 1.05
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.4
+
+[node name="Light_LavaL" type="PointLight2D" parent="Lighting" unique_id=261004437]
+position = Vector2(64, 256)
+color = Color(1, 0.38, 0.14, 1)
+energy = 1.15
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.4
+
+[node name="Light_LavaR" type="PointLight2D" parent="Lighting" unique_id=814766478]
+position = Vector2(896, 256)
+color = Color(1, 0.38, 0.14, 1)
+energy = 1.15
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 2.4
+
+[node name="Light_ExitS" type="PointLight2D" parent="Lighting" unique_id=1979495596]
+position = Vector2(480, 464)
+color = Color(1, 0.72, 0.42, 1)
+energy = 0.7
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.4
+
+[node name="Light_TorchN1" type="PointLight2D" parent="Lighting" unique_id=1421374105]
+position = Vector2(304, 46)
+color = Color(1, 0.64, 0.28, 1)
+energy = 0.95
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.2
+
+[node name="Light_TorchN2" type="PointLight2D" parent="Lighting" unique_id=2117448682]
+position = Vector2(480, 46)
+color = Color(1, 0.64, 0.28, 1)
+energy = 0.95
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.2
+
+[node name="Light_TorchN3" type="PointLight2D" parent="Lighting" unique_id=2139845165]
+position = Vector2(656, 46)
+color = Color(1, 0.64, 0.28, 1)
+energy = 0.95
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.2
+
+[node name="Light_BrazierSL" type="PointLight2D" parent="Lighting" unique_id=1100582455]
+position = Vector2(400, 448)
+color = Color(1, 0.58, 0.22, 1)
+energy = 1.05
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.35
+
+[node name="Light_BrazierSR" type="PointLight2D" parent="Lighting" unique_id=307148516]
+position = Vector2(560, 448)
+color = Color(1, 0.58, 0.22, 1)
+energy = 1.05
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 1.35

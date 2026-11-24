@@ -33,6 +33,8 @@ func _load_room(id: String, spawn: String) -> void:
 	current_room_id = id
 	current_spawn = spawn
 	var scene_path := "res://scenes/rooms/%s.tscn" % id
+	if id == "temple" and ResourceLoader.exists("res://scenes/rooms/room_00.tscn"):
+		scene_path = "res://scenes/rooms/room_00.tscn"
 	if ResourceLoader.exists(scene_path):
 		var packed: PackedScene = load(scene_path)
 		room = packed.instantiate()
