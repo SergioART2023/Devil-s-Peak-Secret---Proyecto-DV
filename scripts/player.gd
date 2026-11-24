@@ -298,8 +298,18 @@ func _die() -> void:
 
 # --- Lava ------------------------------------------------------------------------------------
 func _burn() -> void:
-	global_position = last_safe_pos
-	take_damage(1, global_position + Vector2(0, -1))
+	var dir := Vector2(facing)
+	if velocity.length() > 1.0:
+		if absf(velocity.x) > absf(velocity.y):
+			dir = Vector2(signf(velocity.x), 0.0)
+		else:
+			dir = Vector2(0.0, signf(velocity.y))
+	if dir == Vector2.ZERO:
+		dir = Vector2.DOWN
+	global_position -= dir * 8.0
+	if room != null and room.is_lava(room.pos_to_cell(global_position + Vector2(0, 6))):
+		global_position = last_safe_pos
+	take_damage(1, global_position + dir)
 
 
 func _track_safe(delta: float) -> void:
